@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Sublime Text | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/sublime-text/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2012-09-09T16:26:41+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[改造你的 Gedit，轻松打造类 TextMate 编辑器]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/"/>
+    <updated>2012-09-09T16:23:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/gai-zao-ni-de-gedit,qing-song-da-zao-lei-textmate-bian-ji-qi</id>
+    <content type="html"><![CDATA[<p>Gedit，Ubuntu下默认文本编辑器，通过轻松改造，即可实现TextMate样编辑器：</p>
+
+<h1>1 :  安装gedit插件</h1>
+
+<p><code>
+sudo apt-get install gedit-plugins
+</code></p>
+
+<h1>2 : 下载并安装TextMate 字体</h1>
+
+<p><code>
+cd ~
+wget  http://www.gringod.com/wp-upload/MONACO.TTF
+mv MONACO.TTF monaco.ttf
+cp monaco.ttf /usr/share/fonts/truetype/
+fc-cache -f -v
+</code></p>
+
+<h1>3 :安装代码颜色方案 (Syntax Color Scheme)</h1>
+
+<p>下载方案：http://grigio.org/files/darkmate.xml</p>
+
+<p>打开gedit，选择<code>Edit -&gt; Preferences -&gt; Font &amp; Colors</code>，然后添加。</p>
+
+<h1>4 :安装文件浏览器插件</h1>
+
+<p>下载插件工：http://www.stambouliote.de/download/gedit_classbrowser-0.2.1.tar.gz</p>
+
+<p>解压，并放在<code>usr\gedit-2\plugins</code>目录下</p>
+
+<p>打开gedit，选择<code>Edit-&gt;Preferences-&gt;Plugins</code>，选中需激活的插件即可。</p>
+
+<p>进一步，还可以安装gedit-gmate，详见原文：</p>
+
+<p><strong>gedit plugins for Ruby on Rails</strong>
+http://blog.sudobits.com/2012/03/11/gedit-plugins-for-ruby-on-rails/</p>
+
+<p>改造后效果如下图：</p>
+
+<p><img src="/images/gedit.png" width="680" height="382" title="[gedit]" ></p>
+]]></content>
+  </entry>
+  
+</feed>

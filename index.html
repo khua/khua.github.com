@@ -9,8 +9,14 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="今年2月，用Octopress为自己搭建了一个博客。3月份的某天，因为不小心push错，懒得从头再来，就将一些文章上传到 Ruby-China。一是方便自己回顾，另外也方便跟我一样的初学者。 最近又有写博的冲动，重新享受 rake new_post 和 rake gen_deploy 的乐趣。
-">
+  <meta name="description" content="Gedit，Ubuntu下默认文本编辑器，通过轻松改造，即可实现TextMate样编辑器： 1 : 安装gedit插件 1
+sudo apt-get install gedit-plugins 2 : 下载并安装TextMate 字体 1
+2
+3
+4
+5
+cd ~
+wget http://www. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +72,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/">改造你的 Gedit，轻松打造类 TextMate 编辑器</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-09T16:23:00+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Gedit，Ubuntu下默认文本编辑器，通过轻松改造，即可实现TextMate样编辑器：</p>
+
+<h1>1 :  安装gedit插件</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install gedit-plugins</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>2 : 下载并安装TextMate 字体</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cd ~
+</span><span class='line'>wget  http://www.gringod.com/wp-upload/MONACO.TTF
+</span><span class='line'>mv MONACO.TTF monaco.ttf
+</span><span class='line'>cp monaco.ttf /usr/share/fonts/truetype/
+</span><span class='line'>fc-cache -f -v</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>3 :安装代码颜色方案 (Syntax Color Scheme)</h1>
+
+<p>下载方案：http://grigio.org/files/darkmate.xml</p>
+
+<p>打开gedit，选择<code>Edit -&gt; Preferences -&gt; Font &amp; Colors</code>，然后添加。</p>
+
+<h1>4 :安装文件浏览器插件</h1>
+
+<p>下载插件工：http://www.stambouliote.de/download/gedit_classbrowser-0.2.1.tar.gz</p>
+
+<p>解压，并放在<code>usr\gedit-2\plugins</code>目录下</p>
+
+<p>打开gedit，选择<code>Edit-&gt;Preferences-&gt;Plugins</code>，选中需激活的插件即可。</p>
+
+<p>进一步，还可以安装gedit-gmate，详见原文：</p>
+
+<p><strong>gedit plugins for Ruby on Rails</strong>
+http://blog.sudobits.com/2012/03/11/gedit-plugins-for-ruby-on-rails/</p>
+
+<p>改造后效果如下图：</p>
+
+<p><img src="/images/gedit.png" width="680" height="382" title="[gedit]" ></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -612,65 +697,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/">Instance_eval与class_eval的区别</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-04T20:52:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近在看<strong>《Metaprogramming Ruby》</strong>的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章：</p>
-
-<h3>instance_eval</h3>
-
-<p>首先从名字可以得到的信息是，<strong>instance_eval</strong>的调用者receiver必须是一个<strong>实例instance</strong>，而在instance_eval block的内部，self即为receiver实例本身。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">obj_instance</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
-</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; obj_instance</span>
-</span><span class='line'>  <span class="c1"># current class =&gt; obj_instance&#39;s singleton class</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -681,6 +710,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/">改造你的 Gedit，轻松打造类 TextMate 编辑器</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/09/09/bo-ke-xin-sheng/">博客新生</a>
@@ -696,10 +729,6 @@
     
       <li class="post">
         <a href="/blog/2012/03/19/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/">安装mongodb，并设置自动启动</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a>
       </li>
     
   </ul>

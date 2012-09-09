@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: Blog - TOPI.CO</title>
+  <title>TOPI.CO</title>
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="Category: Blog">
+  <meta name="description" content="最近在看《Metaprogramming Ruby》的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章： instance_eval 首先从名字可以得到的信息是，instance_eval的调用者receiver必须是一个实例instance， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://khua.github.comblog/categories/blog/">
+  <link rel="canonical" href="http://khua.github.com/blog/page/2/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -63,40 +63,75 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
-    <h1 class="entry-title">Category: Blog</h1>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/">Instance_eval与class_eval的区别</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T20:52:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
+
+
+  <div class="entry-content"><p>最近在看<strong>《Metaprogramming Ruby》</strong>的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章：</p>
+
+<h3>instance_eval</h3>
+
+<p>首先从名字可以得到的信息是，<strong>instance_eval</strong>的调用者receiver必须是一个<strong>实例instance</strong>，而在instance_eval block的内部，self即为receiver实例本身。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">obj_instance</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; obj_instance</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; obj_instance&#39;s singleton class</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 
-  
-  <h2>2012</h2>
-
-<article>
-  
-<h1><a href="/blog/2012/09/09/bo-ke-xin-sheng/">博客新生</a></h1>
-<time datetime="2012-09-09T16:13:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>09</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/blog/'>Blog</a>, <a class='category' href='/blog/categories/octopress/'>Octopress</a></span>
-</footer>
-
-
-</article>
-
-</div>
-
-  
-</article>
 
 </div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/">Read on &rarr;</a>
+    </footer>
+  
 
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
 <aside class="sidebar">
   
     <section>
@@ -133,7 +168,6 @@
 
   
 </aside>
-
 
     </div>
   </div>
