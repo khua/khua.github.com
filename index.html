@@ -9,7 +9,8 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。 (* 为了支持新的硬件，升级到了linux-header-2.6.32-38，用uname -r查看，显示3.0.0- &hellip;">
+  <meta name="description" content="使用Nginx和Passenger组合，部署Rails应用程序，是不个不错的选择。 为了使安装速度提高，可以使用淘宝镜像作为Rubygems的源。 Ubuntu系统下，需要先安装PCRE: 1
+sudo apt-get install libpcre3 libpcre3-dev 步骤如下： (1 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">采用Nginx和Passenger部署Rails应用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-10T00:18:00+08:00" pubdate data-updated="true">Sep 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使用Nginx和Passenger组合，部署Rails应用程序，是不个不错的选择。</p>
+
+<p>为了使安装速度提高，可以使用<a href="http://ruby.taobao.org">淘宝镜像</a>作为Rubygems的源。</p>
+
+<p>Ubuntu系统下，需要先安装PCRE:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libpcre3</span> <span class="n">libpcre3</span><span class="o">-</span><span class="n">dev</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>步骤如下：</p>
+
+<h3>(1) gem install passenger</h3>
+
+<h3>(2) passenger-install-nginx-module</h3>
+
+<h3>(3) 设置Nginx的配置文件</h3>
+
+<p>比较关键的设置：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="c1">#即应用程序文件夹的所有者</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -519,6 +587,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">采用Nginx和Passenger部署Rails应用</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a>
       </li>
     
@@ -532,10 +604,6 @@
     
       <li class="post">
         <a href="/blog/2012/09/09/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/">安装mongodb，并设置自动启动</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/09/rest%2Czi-yuan-he-rails/">REST，资源和Rails</a>
       </li>
     
   </ul>

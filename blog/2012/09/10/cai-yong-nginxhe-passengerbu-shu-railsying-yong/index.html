@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>采用Nginx和Passenger部署Rails应用 - TOPI.CO</title>
+  <meta name="author" content="Kevin Hua">
+
+  
+  <meta name="description" content="使用Nginx和Passenger组合，部署Rails应用程序，是不个不错的选择。 为了使安装速度提高，可以使用淘宝镜像作为Rubygems的源。 Ubuntu系统下，需要先安装PCRE: 1
+sudo apt-get install libpcre3 libpcre3-dev 步骤如下： (1 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://khua.github.com/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="TOPI.CO" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TOPI.CO</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:khua.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">采用Nginx和Passenger部署Rails应用</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-10T00:18:00+08:00" pubdate data-updated="true">Sep 10<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>使用Nginx和Passenger组合，部署Rails应用程序，是不个不错的选择。</p>
+
+<p>为了使安装速度提高，可以使用<a href="http://ruby.taobao.org">淘宝镜像</a>作为Rubygems的源。</p>
+
+<p>Ubuntu系统下，需要先安装PCRE:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libpcre3</span> <span class="n">libpcre3</span><span class="o">-</span><span class="n">dev</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>步骤如下：</p>
+
+<h3>(1) gem install passenger</h3>
+
+<h3>(2) passenger-install-nginx-module</h3>
+
+<h3>(3) 设置Nginx的配置文件</h3>
+
+<p>比较关键的设置：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">user</span> <span class="n">www</span><span class="o">-</span><span class="n">data</span> <span class="c1">#即应用程序文件夹的所有者</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#设置主Server，也可以选择使用vhost server</span>
+</span><span class='line'><span class="n">server</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">listen</span>       <span class="mi">80</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">server_name</span>  <span class="n">localhost</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">root</span>     <span class="sr">/path/</span><span class="n">to</span><span class="o">/</span><span class="n">your</span><span class="o">/</span><span class="n">rails_app</span><span class="o">/</span><span class="kp">public</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">passenger_enabled</span>    <span class="n">on</span><span class="p">;</span>
+</span><span class='line'>  <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#注释掉location / {... ...}这个block</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Nginxd自动启动脚本 (init.d) —— CentOS适用</h3>
+
+<div><script src='https://gist.github.com/3683271.js?file='></script>
+<noscript><pre><code>#!/bin/bash
+# v.0.0.1
+# create by jackbillow at 2007.10.15
+# nginx - This shell script takes care of starting and stopping nginx.
+#
+# chkconfig: 35 60 50
+# description: nginx [engine x] is light http web/proxy server
+# that answers incoming ftp service requests.
+# processname: nginx
+# config: /usr/local/nginx/conf/nginx.conf
+nginx_path=&quot;/usr/local/nginx&quot;
+nginx_pid=&quot;/usr/local/nginx/logs/nginx.pid&quot;
+# Source function library.
+. /etc/rc.d/init.d/functions
+# Source networking configuration.
+. /etc/sysconfig/network
+# Check that networking is up.
+[ ${NETWORKING} = &quot;no&quot; ] &amp;&amp; exit 0
+[ -x $nginx_path/sbin/nginx ] || exit 0
+RETVAL=0
+prog=&quot;nginx&quot;
+start() {
+# Start daemons.
+if [ -e $nginx_pid -a ! -z $nginx_pid ];then
+echo &quot;nginx already running...&quot;
+exit 1
+fi
+
+if [ -e /usr/local/nginx/conf/nginx.conf ];then
+  echo -n $&quot;Starting $prog: &quot;
+  $nginx_path/sbin/nginx -c /usr/local/nginx/conf/nginx.conf &amp;
+  RETVAL=$?
+[ $RETVAL -eq 0 ] &amp;&amp; {
+touch /var/lock/subsys/$prog
+success $&quot;$prog&quot;
+}
+echo
+else
+RETVAL=1
+fi
+return $RETVAL
+}
+# Stop daemons.
+stop() {
+        echo -n $&quot;Stopping $prog: &quot;
+        killproc -d 10 $nigx_path/sbin/nginx
+        RETVAL=$?
+        echo
+        [ $RETVAL = 0 ] &amp;&amp; rm -f $nginx_pid /var/lock/subsys/$prog
+}
+# See how we were called.
+case &quot;$1&quot; in
+start)
+        start
+        ;;
+stop)
+        stop
+        ;;
+reconfigure)
+        stop
+        start
+        ;;
+status)
+        status $prog
+        RETVAL=$?
+        ;;
+*)
+        echo $&quot;Usage: $0 {start|stop|reconfigure|status}&quot;
+        exit 1
+esac
+exit $RETVAL</code></pre></noscript></div>
+
+
+<h3>Nginx自动启动脚本 (init.d) —— Ubuntu适用</h3>
+
+<div><script src='https://gist.github.com/3683273.js?file='></script>
+<noscript><pre><code>#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          nginx
+# Required-Start:    $all
+# Required-Stop:     $all
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the nginx web server
+# Description:       starts nginx using start-stop-daemon
+### END INIT INFO
+PATH=/usr/local/nginx/sbin:$PATH
+DAEMON=/usr/local/nginx/sbin/nginx
+NAME=nginx
+DESC=nginx
+test -x $DAEMON || exit 0
+# Include nginx defaults if available
+if [ -f /etc/default/nginx ] ; then
+    . /etc/default/nginx
+fi
+set -e
+. /lib/lsb/init-functions
+case &quot;$1&quot; in
+  start)
+    echo -n &quot;Starting $DESC: &quot;
+    start-stop-daemon --start --quiet --pidfile /var/log/$NAME.pid \
+        --exec $DAEMON -- $DAEMON_OPTS || true
+    echo &quot;$NAME.&quot;
+    ;;
+  stop)
+    echo -n &quot;Stopping $DESC: &quot;
+    start-stop-daemon --stop --quiet --pidfile /var/log/$NAME.pid \
+        --exec $DAEMON || true
+    echo &quot;$NAME.&quot;
+    ;;
+  restart|force-reload)
+    echo -n &quot;Restarting $DESC: &quot;
+    start-stop-daemon --stop --quiet --pidfile \
+        /var/log/$NAME.pid --exec $DAEMON || true
+    sleep 1
+    start-stop-daemon --start --quiet --pidfile \
+        /var/log/$NAME.pid --exec $DAEMON -- $DAEMON_OPTS || true
+    echo &quot;$NAME.&quot;
+    ;;
+  reload)
+      echo -n &quot;Reloading $DESC configuration: &quot;
+      start-stop-daemon --stop --signal HUP --quiet --pidfile /var/log/$NAME.pid \
+          --exec $DAEMON || true
+      echo &quot;$NAME.&quot;
+      ;;
+  status)
+      status_of_proc -p /var/log/$NAME.pid &quot;$DAEMON&quot; nginx &amp;&amp; exit 0 || exit $?
+      ;;
+  *)
+    N=/etc/init.d/$NAME
+    echo &quot;Usage: $N {start|stop|restart|reload|force-reload|status}&quot; &gt;&amp;2
+    exit 1
+    ;;
+esac
+exit 0</code></pre></noscript></div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Kevin Hua</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-10T00:18:00+08:00" pubdate data-updated="true">Sep 10<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/nginx/'>Nginx</a>, <a class='category' href='/blog/categories/passenger/'>Passenger</a>, <a class='category' href='/blog/categories/rails/'>Rails</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/" title="Previous Post: Rails本地开发环境和远程部署环境搭建">&laquo; Rails本地开发环境和远程部署环境搭建</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">采用Nginx和Passenger部署Rails应用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.js</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/">安装Redis，并设置自动启动</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/">安装mongodb，并设置自动启动</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Kevin Hua -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
