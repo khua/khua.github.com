@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Redis | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/redis/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2012-09-09T14:16:06+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[安装Redis，并设置自动启动]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-09-09T14:15:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
+    <content type="html"><![CDATA[<h3>安装Redis</h3>
+
+<h4>(1) 下载Redis</h4>
+
+<p><code>
+wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz
+tar xzvf redis-2.2.11.tar.gz
+</code></p>
+
+<h4>(2) 编译并安装Redis</h4>
+
+<p><code>
+make &amp;&amp; make install
+</code></p>
+
+<h4>(3) 复制并修改配置文件</h4>
+
+<p><code>
+cp redis.conf /etc/redis.conf
+vi /etc/redis.conf
+</code></p>
+
+<!--more-->
+
+
+<p>注意修改以下几项：</p>
+
+<p><code>
+daemonize yes
+loglevel warning
+logfile /var/log/redis.log
+maxmemory 2GB
+</code></p>
+
+<p>(自行斟酌是不要开通Virtual Memory选项)</p>
+
+<h4>(4) 设置Redis-Server自动启动服务</h4>
+
+<p>上网下载启动脚本(<code>gist.github.com</code>，搜索<code>redis init.d</code>)，并简单修改</p>
+
+<p>(至少需要修改<code>redis</code>、<code>REDIS_CONF_FILE</code>)</p>
+
+<p><code>
+vi /etc/init.d/redisctl
+chmod 755 redisctl
+cp /etc/init.d/redisctl /etc/rc.d/init.d/redisctl \
+&amp;&amp; ln -s /etc/init.d/redisctl /etc/rc.d/rc2.d/S90redisctl &amp;&amp; ln -s /etc/init.d/redisctl /etc/rc.d/rc3.d/S90redisctl \
+&amp;&amp; ln -s /etc/init.d/redisctl /etc/rc.d/rc4.d/S90redisctl &amp;&amp; ln -s /etc/init.d/mongod /etc/rc.d/rc5.d/S90redisctl
+chkconfig --add redisctl
+</code></p>
+
+<p>(5) 重新启动后可以测试redis-server是否正常启动</p>
+
+<p><code>redis-cli set foo Bar
+redis-cli get foo
+</code></p>
+
+<h3>Redis自动启动脚本 (CentOS 5.6适用)</h3>
+
+<p>```ruby</p>
+
+<h1>!/bin/sh</h1>
+
+<p>#</p>
+
+<h1>redis - this script starts and stops the redis-server daemon</h1>
+
+<p>#</p>
+
+<h1>chkconfig:   2345 90 10</h1>
+
+<h1>description:  Redis is a persistent key-value database</h1>
+
+<h1>processname: redis-server</h1>
+
+<h1>config:      /etc/redis.conf</h1>
+
+<h1>config:      /etc/sysconfig/redis</h1>
+
+<h1>pidfile:     /var/run/redis.pid</h1>
+
+<h1>Source function library.</h1>
+
+<p>. /etc/rc.d/init.d/functions</p>
+
+<h1>Source networking configuration.</h1>
+
+<p>. /etc/sysconfig/network</p>
+
+<h1>Check that networking is up.</h1>
+
+<p>[ "$NETWORKING" = "no" ] &amp;&amp; exit 0</p>
+
+<p>redis="/usr/local/bin/redis-server"
+prog=$(basename $redis)</p>
+
+<p>REDIS_CONF_FILE="/etc/redis.conf"</p>
+
+<p>[ -f /etc/sysconfig/redis ] &amp;&amp; . /etc/sysconfig/redis</p>
+
+<p>lockfile=/var/lock/subsys/redis</p>
+
+<p>start() {</p>
+
+<pre><code>[ -x $redis ] || exit 5
+[ -f $REDIS_CONF_FILE ] || exit 6
+echo -n $"Starting $prog: "
+daemon $redis $REDIS_CONF_FILE
+retval=$?
+echo
+[ $retval -eq 0 ] &amp;&amp; touch $lockfile
+return $retval
+</code></pre>
+
+<p>}</p>
+
+<p>stop() {</p>
+
+<pre><code>echo -n $"Stopping $prog: "
+killproc $prog -QUIT
+retval=$?
+echo
+[ $retval -eq 0 ] &amp;&amp; rm -f $lockfile
+return $retval
+</code></pre>
+
+<p>}</p>
+
+<p>restart() {</p>
+
+<pre><code>stop
+start
+</code></pre>
+
+<p>}</p>
+
+<p>reload() {</p>
+
+<pre><code>echo -n $"Reloading $prog: "
+killproc $redis -HUP
+RETVAL=$?
+echo
+</code></pre>
+
+<p>}</p>
+
+<p>force_reload() {</p>
+
+<pre><code>restart
+</code></pre>
+
+<p>}</p>
+
+<p>rh_status() {</p>
+
+<pre><code>status $prog
+</code></pre>
+
+<p>}</p>
+
+<p>rh_status_q() {</p>
+
+<pre><code>rh_status &gt;/dev/null 2&gt;&amp;1
+</code></pre>
+
+<p>}</p>
+
+<p>case "$1" in</p>
+
+<pre><code>start)
+    rh_status_q &amp;&amp; exit 0
+    $1
+    ;;
+stop)
+    rh_status_q || exit 0
+    $1
+    ;;
+restart|configtest)
+    $1
+retval=$?
+echo
+[ $retval -eq 0 ] &amp;&amp; rm -f $lockfile
+return $retval
+</code></pre>
+
+<p>}</p>
+
+<p>restart() {</p>
+
+<pre><code>stop
+start
+</code></pre>
+
+<p>}</p>
+
+<p>reload() {</p>
+
+<pre><code>echo -n $"Reloading $prog: "
+killproc $redis -HUP
+RETVAL=$?
+echo
+</code></pre>
+
+<p>}</p>
+
+<p>force_reload() {</p>
+
+<pre><code>restart
+</code></pre>
+
+<p>}</p>
+
+<p>rh_status() {</p>
+
+<pre><code>status $prog
+</code></pre>
+
+<p>}</p>
+
+<p>rh_status_q() {</p>
+
+<pre><code>rh_status &gt;/dev/null 2&gt;&amp;1
+</code></pre>
+
+<p>}</p>
+
+<p>case "$1" in</p>
+
+<pre><code>start)
+    rh_status_q &amp;&amp; exit 0
+    $1
+    ;;
+stop)
+    rh_status_q || exit 0
+    $1
+    ;;
+restart|configtest)
+    $1
+retval=$?
+echo
+[ $retval -eq 0 ] &amp;&amp; rm -f $lockfile
+return $retval
+</code></pre>
+
+<p>}</p>
+
+<p>restart() {</p>
+
+<pre><code>stop
+start
+</code></pre>
+
+<p>}</p>
+
+<p>reload() {</p>
+
+<pre><code>echo -n $"Reloading $prog: "
+killproc $redis -HUP
+RETVAL=$?
+echo
+</code></pre>
+
+<p>}</p>
+
+<p>force_reload() {</p>
+
+<pre><code>restart
+</code></pre>
+
+<p>}</p>
+
+<p>rh_status() {</p>
+
+<pre><code>status $prog
+</code></pre>
+
+<p>}</p>
+
+<p>rh_status_q() {</p>
+
+<pre><code>rh_status &gt;/dev/null 2&gt;&amp;1
+</code></pre>
+
+<p>}</p>
+
+<p>case "$1" in</p>
+
+<pre><code>start)
+    rh_status_q &amp;&amp; exit 0
+    $1
+    ;;
+stop)
+    rh_status_q || exit 0
+    $1
+    ;;
+restart|configtest)
+    $1
+    ;;
+reload)
+    rh_status_q || exit 7
+    $1
+    ;;
+force-reload)
+    force_reload
+    ;;
+status)
+    rh_status
+    ;;
+condrestart|try-restart)
+    rh_status_q || exit 0
+        ;;
+*)
+    echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload}"
+    exit 2
+</code></pre>
+
+<p>esac
+```</p>
+
+<h3>Redis自动启动脚本 (Ubuntu 10.04适用)</h3>
+
+<p>记得修改：</p>
+
+<p>(1) <code>—chuid group:user</code></p>
+
+<p>(2) <code>ln /etc/init.d/redisctl /etc/rc2.d/redisctl，重复rc3，rc4，rc5</code></p>
+
+<p>启动脚本：</p>
+
+<p>```ruby</p>
+
+<h1>! /bin/sh</h1>
+
+<h3>BEGIN INIT INFO</h3>
+
+<h1>Provides:             redis-server</h1>
+
+<h1>Required-Start:       $syslog</h1>
+
+<h1>Required-Stop:        $syslog</h1>
+
+<h1>Should-Start:         $local_fs</h1>
+
+<h1>Should-Stop:          $local_fs</h1>
+
+<h1>Default-Start:        2 3 4 5</h1>
+
+<h1>Default-Stop:         0 1 6</h1>
+
+<h1>Short-Description:    redis-server - Persistent key-value db</h1>
+
+<h1>Description:          redis-server - Persistent key-value db</h1>
+
+<h3>END INIT INFO</h3>
+
+<p>DAEMON=/usr/local/bin/redis-server
+DAEMON_ARGS=/etc/redis.conf
+NAME=redis-server
+DESC=redis-server
+PIDFILE=/var/run/redis.pid
+test -x $DAEMON || exit 0
+test -x $DAEMONBOOTSTRAP || exit 0
+set -e
+case "$1" in
+  start)</p>
+
+<pre><code>    echo -n "Starting $DESC: "
+    touch $PIDFILE
+    # chown redis:redis $PIDFILE
+    if start-stop-daemon —start —quiet —umask 007 —pidfile $PIDFILE —chuid redis:redis —exec $DAEMON — $DAEMON_ARGS
+    then
+            echo "$NAME."
+    else
+            echo "failed"
+    fi
+    ;;
+</code></pre>
+
+<p>  stop)</p>
+
+<pre><code>    echo -n "Stopping $DESC: "
+    if start-stop-daemon —stop —retry 10 —quiet —oknodo —pidfile $PIDFILE —exec $DAEMON
+    then
+            echo "$NAME."
+    else
+            echo "failed"
+    fi
+    rm -f $PIDFILE
+    ;;
+</code></pre>
+
+<p>  restart|force-reload)</p>
+
+<pre><code>    ${0} stop
+    ${0} start
+    ;;
+</code></pre>
+
+<p>  *)</p>
+
+<pre><code>    echo "Usage: /etc/init.d/$NAME {start|stop|restart|force-reload}" &gt;&amp;2
+    exit 1
+    ;;
+</code></pre>
+
+<p>esac
+exit 0
+```</p>
+]]></content>
+  </entry>
+  
+</feed>
