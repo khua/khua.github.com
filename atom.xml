@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T13:04:50+08:00</updated>
+  <updated>2012-09-09T14:03:30+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,140 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[REST，资源和Rails]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/rest%2Czi-yuan-he-rails/"/>
+    <updated>2012-09-09T14:01:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/rest,zi-yuan-he-rails</id>
+    <content type="html"><![CDATA[<p>具备表象状态迁移(Representational State Transfer, REST)或称为表象化状态迁移。它代表了分布式超媒体系统的体系结构风格，该风格中是Roy Fielding在论文中定义。REST在系统中加入一系列的限制，为确保极大的可扩展性。虽然REST定义了大量的重要体系结构限制(例如将用户接口和服务器实现的清晰分离、无状态、以及缓存能力)。REST关键的特有能力是统一接口的要求。REST接口是由HTTP接口定义的，支持GET/POST/PUT/DELETE。这种统一接口限制，跟面向服务的体系结构(Service-Oriented Architecture, SOA)相反，后者为每种类型的服务定义了不同的接口。</p>
+
+<p>REST构架风格具有以下设计准则：</p>
+
+<ul>
+<li>网络上的所有事物都抽象为资源(resources = data + representation)</li>
+<li>每个资源都对应一个唯一的资源标识(resources identifier = url)</li>
+<li>通过连接器(generic connector interface)对资源进行操作(generic connector = HTTP Protocol 即GET/POST/PUT/DELETE)
+＊ 对资源的各种操作不会改变资源标识(对资源的GET操作不改变资源的状态)</li>
+<li>所有操作都是无状态的(stateless)</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>从Rails 1.2开始，Rails引入了完全REST化的API支持。路由(routes)实现了资源(resources)的概念，而representation(表象)则由respond_to方法实现。RESTful带给Rails最大的好处是：它帮助我们用一种比较标准化的方式来命名和组织Controllers和Actions。在没有RESTful之前，典型路由的设计是逐一指定Controller和Action。</p>
+
+<p>将RESTful带入Rails路由系统的构思，出自它对应了HTTP动词# POST/GET/PUT/DELETE到数据的新增、读取、更新、删除等四项操作。原来的路由：</p>
+
+<p><code>HTTP method：在HTTP1.1通信协义中定义了九种单词，分别是：HEAD/GET/POST/PUT/DELETE/TRACE/OPTIONS/CONNECT/PATCH</code></p>
+
+<ul>
+<li>/topics/create</li>
+<li>/topics/show/id</li>
+<li>/topics/update/id</li>
+<li>/topics/destroy/id</li>
+</ul>
+
+
+<p>将会变成：</p>
+
+<ul>
+<li>POST /topics 对应到Controller中的creat action</li>
+<li>GET /topics/id 对应到Controller中的show action</li>
+<li>PUT /topics/id 对应到Controller中的update action</li>
+<li>DELETE /topics/id 对应到Controller中的destroy action</li>
+</ul>
+
+
+<p>因此，Rails的路由设定很大程度上简化，只须在config/routes.rb中加入下行：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>resources :topics</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如此，会自动创建4个命名路由(named routes)，搭配四个HTTP动词，对应在到七个Actions，它的实际作用，就如同以下的设定：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>get  '/topics'       =&gt; "topics#index",   :as =&gt; "topics"
+</span><span class='line'>post  '/topics'       =&gt; "topics#create",  :as =&gt; "topics"
+</span><span class='line'>get   '/topics/:id'   =&gt; "topics#show",    :as =&gt; "topic"
+</span><span class='line'>put   '/topics/:id'   =&gt; "topics#update",  :as =&gt; "topic"
+</span><span class='line'>delete    '/topics/:id'   =&gt; "topics#destroy",:as =&gt; "topic"
+</span><span class='line'>get   '/topics/:id'   =&gt; "topics#new", :as =&gt; "new_topic"
+</span><span class='line'>get   '/topics/:id/edit'  =&gt; "topics#edit",    :as =&gt; "edit_topic"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以参考下表：</p>
+
+<table>
+<tr>
+<td>Helper</td>
+<td>GET</td>
+<td>POST</td>
+<td>PUT</td>
+<td>DELETE</td>
+</tr>
+<tr>
+<td>topic_path(@topic)</td>
+<td>/topics/id<br>topics#show</td>
+<td></td>
+<td>/topics/id<br>topics#update</td>
+<td>/topics/id<br>topics#destroy</td>
+</tr>
+<tr>
+<td>topics_path</td>
+<td>/topics<br>topics#index</td>
+<td>/topics<br>topics#create</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>edit_topic_path(@topic)</td>
+<td>/topics/id/edit<br>topics#edit</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>new_topic_path</td>
+<td>/topics/new<br>topics#new</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+
+<p>注意，这七个Action方法的名字是Rails约定好的，无法修改。因此，链接可以写成：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>link_to topic.name, topic_path(@topic)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>而不是写成：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>link_to topic.name, :controller =&gt; 'topics', :action =&gt; :show, :id =&gt; topic.id</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因此，只需记得资源(resources)，就可以写成URL Helper:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[custom route_]topic[s]_path(@topic), :method =&gt; GET | POST | PUT | DELETE</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意，<em>path结尾对应相对网址，而</em>url结尾对应完整的网址(包含域名)。</p>
+
+<p>本文参考：<a href="http://ihower.tw/rails3/restful.html">RESTful应用程式，Ruby on Rails实战圣经，iHower</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何建立自己的Rubygems]]></title>
