@@ -4,7 +4,7 @@
   <title><![CDATA[Category: TextMate | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/textmate/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T16:26:41+08:00</updated>
+  <updated>2012-09-09T16:27:39+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -41,6 +41,9 @@ fc-cache -f -v
 <p>下载方案：http://grigio.org/files/darkmate.xml</p>
 
 <p>打开gedit，选择<code>Edit -&gt; Preferences -&gt; Font &amp; Colors</code>，然后添加。</p>
+
+<!--mpore-->
+
 
 <h1>4 :安装文件浏览器插件</h1>
 
