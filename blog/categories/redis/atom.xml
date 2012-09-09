@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Redis | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/redis/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:40:48+08:00</updated>
+  <updated>2012-09-09T14:43:27+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[安装Redis，并设置自动启动]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
-    <updated>2012-09-09T14:34:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
+    <link href="http://khua.github.com/blog/2012/09/10/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-09-10T10:25:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/10/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
     <content type="html"><![CDATA[<h3>安装Redis</h3>
 
 <h4>(1) 下载Redis</h4>
@@ -40,10 +40,10 @@ cp redis.conf /etc/redis.conf
 vi /etc/redis.conf
 </code></p>
 
+<p>注意修改以下几项：</p>
+
 <!--more-->
 
-
-<p>注意修改以下几项：</p>
 
 <p><code>
 daemonize yes
