@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Redis | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/redis/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:19:57+08:00</updated>
+  <updated>2012-09-09T14:32:01+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[安装Redis，并设置自动启动]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
-    <updated>2012-09-09T14:15:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
+    <title type="html"><![CDATA[Redis的安装和自动启动设置]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/redisde-an-zhuang-he-zi-dong-qi-dong-she-zhi/"/>
+    <updated>2012-09-09T14:31:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/redisde-an-zhuang-he-zi-dong-qi-dong-she-zhi</id>
     <content type="html"><![CDATA[<h3>安装Redis</h3>
 
 <h4>(1) 下载Redis</h4>
