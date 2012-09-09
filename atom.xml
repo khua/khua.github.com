@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T16:02:55+08:00</updated>
+  <updated>2012-09-09T16:11:38+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[采用Nginx和Passenger部署Rails应用]]></title>
-    <link href="http://khua.github.com/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong/"/>
-    <updated>2012-09-10T00:18:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/10/cai-yong-nginxhe-passengerbu-shu-railsying-yong</id>
+    <link href="http://khua.github.com/blog/2012/03/19/cai-yong-nginxhe-passengerbu-shu-railsying-yong/"/>
+    <updated>2012-03-19T23:50:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/19/cai-yong-nginxhe-passengerbu-shu-railsying-yong</id>
     <content type="html"><![CDATA[<p>使用Nginx和Passenger组合，部署Rails应用程序，是不个不错的选择。</p>
 
 <p>为了使安装速度提高，可以使用<a href="http://ruby.taobao.org">淘宝镜像</a>作为Rubygems的源。</p>
@@ -220,261 +220,10 @@ exit 0</code></pre></noscript></div>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Rails本地开发环境和远程部署环境搭建]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/"/>
-    <updated>2012-09-09T15:54:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian</id>
-    <content type="html"><![CDATA[<p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
-
-<p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>
-
-<h3>一、基于CentOS 5.6的部署环境</h3>
-
-<h4>1a. 设置远程登录</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ssh root@96.126.102.82</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Windows环境下，可以使用Putty进行远程连接，并通过修改<code>Apperance: Fixdays</code>及<code>Translation: UTF-8</code>，以正常显示中文。</p>
-
-<h4>1b. 设置locale <code>vim /etc/profile</code>，添加：</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
-</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>2. 安装一些基本包</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">gcc</span><span class="o">-</span><span class="n">c</span><span class="o">++</span> <span class="n">make</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
-
-
-<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">m4</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="mi">13</span>
-</span><span class='line'><span class="n">autoconf</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">65</span>
-</span><span class='line'><span class="n">automake</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">11</span>
-</span><span class='line'><span class="n">libtool</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="n">b</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
-
-<h4>4. 安装其它一些编译依赖的软件包</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">zlib</span><span class="o">-</span><span class="n">devel</span> <span class="n">openssl</span><span class="o">-</span><span class="n">devel</span> <span class="n">perl</span> <span class="n">cpio</span> <span class="n">expat</span><span class="o">-</span><span class="n">devel</span> <span class="n">gettext</span><span class="o">-</span><span class="n">devel</span> <span class="n">curl</span> <span class="n">curl</span><span class="o">-</span><span class="n">devel</span> <span class="n">imake</span> <span class="n">libxml2</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">devel</span> <span class="n">libxslt</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">devel</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">wget</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">pub</span><span class="o">/</span><span class="n">software</span><span class="o">/</span><span class="n">scm</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
-</span><span class='line'><span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
-</span><span class='line'><span class="n">cd</span> <span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span>
-</span><span class='line'><span class="o">.</span><span class="n">/configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=</span><span class="sr">/usr/</span><span class="n">local</span>
-</span><span class='line'><span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>(后续步骤见第三部分)</p>
-
-<h3>二、基于Ubuntu 10.04 LTS的本地环境</h3>
-
-<h4>1.  设置locale <code>vim /etc/profile</code>，添加：</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
-</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>2. 安装一些基本包</h4>
-
-<p>(make已经默认安装，3.81版)</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">m4</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="mi">13</span>
-</span><span class='line'><span class="n">autoconf</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">65</span>
-</span><span class='line'><span class="n">automake</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">11</span>
-</span><span class='line'><span class="n">libtool</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="n">b</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
-
-<h4>4. 安装其它一些编译依赖的软件包</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">perl</span> <span class="n">cpio</span> <span class="n">libexpat1</span><span class="o">-</span><span class="n">dev</span> <span class="n">gettext</span> <span class="n">curl</span> <span class="n">libcurl4</span><span class="o">-</span><span class="n">gnutls</span><span class="o">-</span><span class="n">dev</span> <span class="n">xutils</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxml2</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxslt11</span><span class="o">.</span><span class="mi">1</span> <span class="p">(</span><span class="sc">?)</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libyaml</span><span class="o">-</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">dev</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span><span class="o">-</span><span class="n">core</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>通用安装部分 (Ruby, MongoDB, redis, Coreseek, NodeJS)</h3>
-
-<h4>6. 安装Ruby 1.9.2 p290，并升级Rubygems</h4>
-
-<p>详见后续文章：安装Ruby 1.9.3 p125</p>
-
-<h4>7. 安装mongodb，并配置自动启动服务</h4>
-
-<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
-
-<h4>8. 安装redis，并配置自动启动服务</h4>
-
-<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
-
-<h4>9. 安装Coreseek 4.1 Beta</h4>
-
-<p>可选，详见后续文章：安装Coreseek 4.1版</p>
-
-<h4>10. 安装node.js，并使用npm管理安装</h4>
-
-<p>详见：<a href="http://topi.co/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.JS</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[安装和测试Node.js]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/"/>
-    <updated>2012-09-09T15:49:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js</id>
-    <content type="html"><![CDATA[<h3>NodeJS，服务器端的JavaScript</h3>
-
-<p><img src="http://khua.github.com/images/nodejs.png" width="245" height="66" title="[Node.js]" ></p>
-
-<p>JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言:它可以使用在不同的上下文中,其能力与其他同类语言相比有过之而无不及。</p>
-
-<p>Node.js 事实上就是另外一种上下文,它允许在后端(脱离浏览器环境)运行 JavaScript 代码。要实现在后台运行 JavaScript 代码,代码需要先被解释然后正确的执行。Node.js 的原理正是如此,它使用了 <code>Google 的 V8 虚拟机</code>(Google 的 Chrome 浏览器使用的 JavaScript 执行环境),来解释和执行 JavaScript 代码。</p>
-
-<p>除此之外,伴随着 Node.js 的还有许多有用的模块,它们可以简化很多重复的劳作,比如向终端输出字符串。因此,Node.js 事实上既是一个运行时环境,同时又是一个库。要使用 Node.js, 首先需要进行安装。</p>
-
-<h3>安装Node.js</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://nodejs.org/dist/v0.6.12/node-v0.6.12.tar.gz
-</span><span class='line'>tar xzvf node-v0.6.12.tar.gz
-</span><span class='line'>cd node-v0.6.12
-</span><span class='line'>./configure
-</span><span class='line'>make && make install</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<!--more-->
-
-
-<h3>测试Node.js</h3>
-
-<ul>
-<li><p>查看node.js版本：<code>node -v</code></p></li>
-<li><p>测试 Hello World Script for Node.js：</p></li>
-</ul>
-
-
-<p>vim helloworld.js</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">});</span>
-</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;Hello World\n&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="mi">1229</span><span class="p">,</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server running at http://127.0.0.1:1229/&#39;</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>系统会提示：<code>Server running at http://127.0.0.1:1229/</code>，打开浏览器输入<code>127.0.0.1:1229</code>就可以查看效果啦。</p>
-
-<ul>
-<li>或从https://github.com/ry/node_chat下载示例</li>
-</ul>
-
-
-<h3>通过NPM安装forever或juggernaut</h3>
-
-<ul>
-<li>安装npm (如果权限不够，可以将<code>sh</code>改为<code>sudo sh</code>)</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">curl</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//npmjs.org/install.sh | sh</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>使用npm安装forever和juggernaut</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">forever</span> <span class="o">-</span><span class="nx">g</span>
-</span><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">juggernaut</span> <span class="o">-</span><span class="nx">g</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>在Rails中使用juggernaut</li>
-</ul>
-
-
-<p>在Gemfile中加入：<code>gem juggernaut</code></p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[安装Redis，并设置自动启动]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
-    <updated>2012-09-09T14:45:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
+    <link href="http://khua.github.com/blog/2012/03/19/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-03-19T22:16:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/19/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
     <content type="html"><![CDATA[<h3>安装Redis</h3>
 
 <h4>(1) 下载Redis</h4>
@@ -805,9 +554,9 @@ exit 0</code></pre></noscript></div>
   
   <entry>
     <title type="html"><![CDATA[安装mongodb，并设置自动启动]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/"/>
-    <updated>2012-09-09T14:08:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-mongodb,bing-she-zhi-zi-dong-qi-dong</id>
+    <link href="http://khua.github.com/blog/2012/03/19/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-03-19T22:03:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/19/an-zhuang-mongodb,bing-she-zhi-zi-dong-qi-dong</id>
     <content type="html"><![CDATA[<h3>Ubuntu环境下安装</h3>
 
 <p>Ubuntu环境下比较容易安装，可参考：</p>
@@ -1031,10 +780,261 @@ exit 0</code></pre></noscript></div>
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Rails本地开发环境和远程部署环境搭建]]></title>
+    <link href="http://khua.github.com/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/"/>
+    <updated>2012-03-19T20:54:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian</id>
+    <content type="html"><![CDATA[<p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
+
+<p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>
+
+<h3>一、基于CentOS 5.6的部署环境</h3>
+
+<h4>1a. 设置远程登录</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh root@96.126.102.82</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Windows环境下，可以使用Putty进行远程连接，并通过修改<code>Apperance: Fixdays</code>及<code>Translation: UTF-8</code>，以正常显示中文。</p>
+
+<h4>1b. 设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2. 安装一些基本包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">gcc</span><span class="o">-</span><span class="n">c</span><span class="o">++</span> <span class="n">make</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">m4</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="mi">13</span>
+</span><span class='line'><span class="n">autoconf</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">65</span>
+</span><span class='line'><span class="n">automake</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">11</span>
+</span><span class='line'><span class="n">libtool</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="n">b</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
+
+<h4>4. 安装其它一些编译依赖的软件包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">zlib</span><span class="o">-</span><span class="n">devel</span> <span class="n">openssl</span><span class="o">-</span><span class="n">devel</span> <span class="n">perl</span> <span class="n">cpio</span> <span class="n">expat</span><span class="o">-</span><span class="n">devel</span> <span class="n">gettext</span><span class="o">-</span><span class="n">devel</span> <span class="n">curl</span> <span class="n">curl</span><span class="o">-</span><span class="n">devel</span> <span class="n">imake</span> <span class="n">libxml2</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">devel</span> <span class="n">libxslt</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">devel</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">wget</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">pub</span><span class="o">/</span><span class="n">software</span><span class="o">/</span><span class="n">scm</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</span><span class='line'><span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</span><span class='line'><span class="n">cd</span> <span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span>
+</span><span class='line'><span class="o">.</span><span class="n">/configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=</span><span class="sr">/usr/</span><span class="n">local</span>
+</span><span class='line'><span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(后续步骤见第三部分)</p>
+
+<h3>二、基于Ubuntu 10.04 LTS的本地环境</h3>
+
+<h4>1.  设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2. 安装一些基本包</h4>
+
+<p>(make已经默认安装，3.81版)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">m4</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="mi">13</span>
+</span><span class='line'><span class="n">autoconf</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">65</span>
+</span><span class='line'><span class="n">automake</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">11</span>
+</span><span class='line'><span class="n">libtool</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="n">b</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
+
+<h4>4. 安装其它一些编译依赖的软件包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">perl</span> <span class="n">cpio</span> <span class="n">libexpat1</span><span class="o">-</span><span class="n">dev</span> <span class="n">gettext</span> <span class="n">curl</span> <span class="n">libcurl4</span><span class="o">-</span><span class="n">gnutls</span><span class="o">-</span><span class="n">dev</span> <span class="n">xutils</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxml2</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxslt11</span><span class="o">.</span><span class="mi">1</span> <span class="p">(</span><span class="sc">?)</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libyaml</span><span class="o">-</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">dev</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span><span class="o">-</span><span class="n">core</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>通用安装部分 (Ruby, MongoDB, redis, Coreseek, NodeJS)</h3>
+
+<h4>6. 安装Ruby 1.9.2 p290，并升级Rubygems</h4>
+
+<p>详见后续文章：安装Ruby 1.9.3 p125</p>
+
+<h4>7. 安装mongodb，并配置自动启动服务</h4>
+
+<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
+
+<h4>8. 安装redis，并配置自动启动服务</h4>
+
+<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
+
+<h4>9. 安装Coreseek 4.1 Beta</h4>
+
+<p>可选，详见后续文章：安装Coreseek 4.1版</p>
+
+<h4>10. 安装node.js，并使用npm管理安装</h4>
+
+<p>详见：<a href="http://topi.co/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.JS</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[安装和测试Node.js]]></title>
+    <link href="http://khua.github.com/blog/2012/03/15/an-zhuang-he-ce-shi-node-dot-js/"/>
+    <updated>2012-03-15T22:24:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/15/an-zhuang-he-ce-shi-node-dot-js</id>
+    <content type="html"><![CDATA[<h3>NodeJS，服务器端的JavaScript</h3>
+
+<p><img src="http://khua.github.com/images/nodejs.png" width="245" height="66" title="[Node.js]" ></p>
+
+<p>JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言:它可以使用在不同的上下文中,其能力与其他同类语言相比有过之而无不及。</p>
+
+<p>Node.js 事实上就是另外一种上下文,它允许在后端(脱离浏览器环境)运行 JavaScript 代码。要实现在后台运行 JavaScript 代码,代码需要先被解释然后正确的执行。Node.js 的原理正是如此,它使用了 <code>Google 的 V8 虚拟机</code>(Google 的 Chrome 浏览器使用的 JavaScript 执行环境),来解释和执行 JavaScript 代码。</p>
+
+<p>除此之外,伴随着 Node.js 的还有许多有用的模块,它们可以简化很多重复的劳作,比如向终端输出字符串。因此,Node.js 事实上既是一个运行时环境,同时又是一个库。要使用 Node.js, 首先需要进行安装。</p>
+
+<h3>安装Node.js</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://nodejs.org/dist/v0.6.12/node-v0.6.12.tar.gz
+</span><span class='line'>tar xzvf node-v0.6.12.tar.gz
+</span><span class='line'>cd node-v0.6.12
+</span><span class='line'>./configure
+</span><span class='line'>make && make install</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<h3>测试Node.js</h3>
+
+<ul>
+<li><p>查看node.js版本：<code>node -v</code></p></li>
+<li><p>测试 Hello World Script for Node.js：</p></li>
+</ul>
+
+
+<p>vim helloworld.js</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">});</span>
+</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;Hello World\n&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}).</span><span class="nx">listen</span><span class="p">(</span><span class="mi">1229</span><span class="p">,</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server running at http://127.0.0.1:1229/&#39;</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>系统会提示：<code>Server running at http://127.0.0.1:1229/</code>，打开浏览器输入<code>127.0.0.1:1229</code>就可以查看效果啦。</p>
+
+<ul>
+<li>或从https://github.com/ry/node_chat下载示例</li>
+</ul>
+
+
+<h3>通过NPM安装forever或juggernaut</h3>
+
+<ul>
+<li>安装npm (如果权限不够，可以将<code>sh</code>改为<code>sudo sh</code>)</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">curl</span> <span class="nx">http</span><span class="o">:</span><span class="c1">//npmjs.org/install.sh | sh</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>使用npm安装forever和juggernaut</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">forever</span> <span class="o">-</span><span class="nx">g</span>
+</span><span class='line'><span class="nx">npm</span> <span class="nx">install</span> <span class="nx">juggernaut</span> <span class="o">-</span><span class="nx">g</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>在Rails中使用juggernaut</li>
+</ul>
+
+
+<p>在Gemfile中加入：<code>gem juggernaut</code></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[REST，资源和Rails]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/rest%2Czi-yuan-he-rails/"/>
-    <updated>2012-09-09T14:01:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/rest,zi-yuan-he-rails</id>
+    <link href="http://khua.github.com/blog/2012/03/12/rest%2Czi-yuan-he-rails/"/>
+    <updated>2012-03-12T21:39:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/12/rest,zi-yuan-he-rails</id>
     <content type="html"><![CDATA[<p>具备表象状态迁移(Representational State Transfer, REST)或称为表象化状态迁移。它代表了分布式超媒体系统的体系结构风格，该风格中是Roy Fielding在论文中定义。REST在系统中加入一系列的限制，为确保极大的可扩展性。虽然REST定义了大量的重要体系结构限制(例如将用户接口和服务器实现的清晰分离、无状态、以及缓存能力)。REST关键的特有能力是统一接口的要求。REST接口是由HTTP接口定义的，支持GET/POST/PUT/DELETE。这种统一接口限制，跟面向服务的体系结构(Service-Oriented Architecture, SOA)相反，后者为每种类型的服务定义了不同的接口。</p>
 
 <p>REST构架风格具有以下设计准则：</p>
@@ -1166,9 +1166,9 @@ exit 0</code></pre></noscript></div>
   
   <entry>
     <title type="html"><![CDATA[如何建立自己的Rubygems]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/ru-he-jian-li-zi-ji-de-rubygems/"/>
-    <updated>2012-09-09T12:50:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/ru-he-jian-li-zi-ji-de-rubygems</id>
+    <link href="http://khua.github.com/blog/2012/03/11/ru-he-jian-li-zi-ji-de-rubygems/"/>
+    <updated>2012-03-11T18:37:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/11/ru-he-jian-li-zi-ji-de-rubygems</id>
     <content type="html"><![CDATA[<h3>简单的示例：</h3>
 
 <p>以创建topico-0.0.1.gem为例：</p>
@@ -1411,9 +1411,9 @@ exit 0</code></pre></noscript></div>
   
   <entry>
     <title type="html"><![CDATA[熟练使用RubyGems]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/shou-lian-shi-yong-rubygems/"/>
-    <updated>2012-09-09T10:42:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/shou-lian-shi-yong-rubygems</id>
+    <link href="http://khua.github.com/blog/2012/03/11/shou-lian-shi-yong-rubygems/"/>
+    <updated>2012-03-11T16:01:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/11/shou-lian-shi-yong-rubygems</id>
     <content type="html"><![CDATA[<p>RubyGems是Ruby的插件管理系统，可以轻松安装及管理Ruby函式库。可以在RubyGems上找到所有开源套件，另外，如果想找到Ruby或Rails有哪些好用的插件，也可以浏览看看<a href="https://www.ruby-toolbox.com/">The Ruby Toolbox</a>，会按照插件的热门程度排序。</p>
 
 <h3>常见指令</h3>
@@ -1561,6 +1561,179 @@ exit 0</code></pre></noscript></div>
 2090    orm_adapter
 2036    rdoc</code></pre></noscript></div>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[instance_eval与class_eval的区别]]></title>
+    <link href="http://khua.github.com/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/"/>
+    <updated>2012-03-04T20:52:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie</id>
+    <content type="html"><![CDATA[<p>最近在看<strong>《Metaprogramming Ruby》</strong>的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章：</p>
+
+<h3>instance_eval</h3>
+
+<p>首先从名字可以得到的信息是，<strong>instance_eval</strong>的调用者receiver必须是一个<strong>实例instance</strong>，而在instance_eval block的内部，self即为receiver实例本身。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">obj_instance</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; obj_instance</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; obj_instance&#39;s singleton class</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<p>根据这个定义，如果在一个实例上调用了instance_eval，就可以在其中定义该实例的单态函数 singleton_method</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; a</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; a&#39;s singleton class</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method1</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;this is a singleton method of instance a&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; this is a singleton method of instance a</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">b</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">b</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt;NoMethodError: undefined method `method1&#39; for #&lt;A:0x10043ff70&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同样，因为<strong>类class本身也是Class类的一个实例</strong>，instance_eval也可以用在类上，这个时候就可以在其中定义该类的singleton_method，即为该类的类函数。</p>
+
+<p>换句话说，可以用instance_eval来定义类函数class method，这比较容易混淆，需要搞清楚。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; A</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; A&#39;s singleton class</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method1</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;this is a singleton method of class A&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; this is a singleton method of class A</span>
+</span><span class='line'><span class="nb">class_eval</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>class_eval</h3>
+
+<p>再来看<strong>class_eval</strong>，首先从名字可以得到的信息是，class_eval的调用者receiver必须是一个<strong>类</strong>，而在class_eval block的内部，self即为receiver类本身。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; A</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; A</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>根据这个定义，如果在一个类上调用了class_eval，就可以在其中定义该类的实例函数 instance_method</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; NoMethodError: undefined method `method1&#39; for #&lt;A:0x10043ff70&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; A</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; A</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method1</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;this is a instance method of class A&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; this is a instance method of class A</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>换句话说，可以用class_eval来定义实例函数instance method，这也比较容易混淆，需要搞清楚。</p>
+
+<h3>总结</h3>
+
+<p>instance_eval必须由instance来调用，可以用来定义单态函数singleton_methods</p>
+
+<p>class_eval必须是由class来调用，可以用来定义实例函数instance_methods</p>
 ]]></content>
   </entry>
   

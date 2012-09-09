@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>instance_eval与class_eval的区别 - TOPI.CO</title>
+  <meta name="author" content="Kevin Hua">
+
+  
+  <meta name="description" content="最近在看《Metaprogramming Ruby》的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章： instance_eval 首先从名字可以得到的信息是，instance_eval的调用者receiver必须是一个实例instance， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://khua.github.com/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="TOPI.CO" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TOPI.CO</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:khua.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Instance_eval与class_eval的区别</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T20:52:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近在看<strong>《Metaprogramming Ruby》</strong>的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章：</p>
+
+<h3>instance_eval</h3>
+
+<p>首先从名字可以得到的信息是，<strong>instance_eval</strong>的调用者receiver必须是一个<strong>实例instance</strong>，而在instance_eval block的内部，self即为receiver实例本身。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">obj_instance</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; obj_instance</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; obj_instance&#39;s singleton class</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<p>根据这个定义，如果在一个实例上调用了instance_eval，就可以在其中定义该实例的单态函数 singleton_method</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; a</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; a&#39;s singleton class</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method1</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;this is a singleton method of instance a&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; this is a singleton method of instance a</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">b</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">b</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt;NoMethodError: undefined method `method1&#39; for #&lt;A:0x10043ff70&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>同样，因为<strong>类class本身也是Class类的一个实例</strong>，instance_eval也可以用在类上，这个时候就可以在其中定义该类的singleton_method，即为该类的类函数。</p>
+
+<p>换句话说，可以用instance_eval来定义类函数class method，这比较容易混淆，需要搞清楚。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">instance_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; A</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; A&#39;s singleton class</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method1</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;this is a singleton method of class A&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; this is a singleton method of class A</span>
+</span><span class='line'><span class="nb">class_eval</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>class_eval</h3>
+
+<p>再来看<strong>class_eval</strong>，首先从名字可以得到的信息是，class_eval的调用者receiver必须是一个<strong>类</strong>，而在class_eval block的内部，self即为receiver类本身。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; A</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; A</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>根据这个定义，如果在一个类上调用了class_eval，就可以在其中定义该类的实例函数 instance_method</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">class</span> <span class="nc">A</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">new</span>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; NoMethodError: undefined method `method1&#39; for #&lt;A:0x10043ff70&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">A</span><span class="o">.</span><span class="n">class_eval</span> <span class="k">do</span>
+</span><span class='line'>  <span class="nb">self</span>  <span class="c1"># =&gt; A</span>
+</span><span class='line'>  <span class="c1"># current class =&gt; A</span>
+</span><span class='line'>  <span class="k">def</span> <span class="nf">method1</span>
+</span><span class='line'>    <span class="nb">puts</span> <span class="s1">&#39;this is a instance method of class A&#39;</span>
+</span><span class='line'>  <span class="k">end</span>
+</span><span class='line'><span class="k">end</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">a</span><span class="o">.</span><span class="n">method1</span>
+</span><span class='line'><span class="c1">#=&gt; this is a instance method of class A</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>换句话说，可以用class_eval来定义实例函数instance method，这也比较容易混淆，需要搞清楚。</p>
+
+<h3>总结</h3>
+
+<p>instance_eval必须由instance来调用，可以用来定义单态函数singleton_methods</p>
+
+<p>class_eval必须是由class来调用，可以用来定义实例函数instance_methods</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Kevin Hua</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-04T20:52:00+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/class-eval/'>class_eval</a>, <a class='category' href='/blog/categories/instance-eval/'>instance_eval</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/03/11/shou-lian-shi-yong-rubygems/" title="Next Post: 熟练使用RubyGems">熟练使用RubyGems &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/03/19/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">采用Nginx和Passenger部署Rails应用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/19/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/">安装Redis，并设置自动启动</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/19/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/">安装mongodb，并设置自动启动</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/15/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.js</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Kevin Hua -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

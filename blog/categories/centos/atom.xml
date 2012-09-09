@@ -4,7 +4,7 @@
   <title><![CDATA[Category: CentOS | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/centos/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T16:02:55+08:00</updated>
+  <updated>2012-09-09T16:11:38+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Rails本地开发环境和远程部署环境搭建]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/"/>
-    <updated>2012-09-09T15:54:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian</id>
+    <link href="http://khua.github.com/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/"/>
+    <updated>2012-03-19T20:54:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian</id>
     <content type="html"><![CDATA[<p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
 
 <p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>

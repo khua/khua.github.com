@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mongoid | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/mongoid/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T16:02:55+08:00</updated>
+  <updated>2012-09-09T16:11:38+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[安装mongodb，并设置自动启动]]></title>
-    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/"/>
-    <updated>2012-09-09T14:08:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-mongodb,bing-she-zhi-zi-dong-qi-dong</id>
+    <link href="http://khua.github.com/blog/2012/03/19/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-03-19T22:03:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/19/an-zhuang-mongodb,bing-she-zhi-zi-dong-qi-dong</id>
     <content type="html"><![CDATA[<h3>Ubuntu环境下安装</h3>
 
 <p>Ubuntu环境下比较容易安装，可参考：</p>

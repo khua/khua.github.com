@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: class_eval | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/class-eval/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2012-09-09T16:11:38+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[instance_eval与class_eval的区别]]></title>
+    <link href="http://khua.github.com/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie/"/>
+    <updated>2012-03-04T20:52:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/03/04/instance-evalyu-class-evalde-qu-bie</id>
+    <content type="html"><![CDATA[<p>最近在看<strong>《Metaprogramming Ruby》</strong>的时候，看到代码块一章，在网上看到一篇介绍instance_eval与class_eval的文章：</p>
+
+<h3>instance_eval</h3>
+
+<p>首先从名字可以得到的信息是，<strong>instance_eval</strong>的调用者receiver必须是一个<strong>实例instance</strong>，而在instance_eval block的内部，self即为receiver实例本身。</p>
+
+<p><code>ruby
+obj_instance.instance_eval do
+  self  # =&gt; obj_instance
+  # current class =&gt; obj_instance's singleton class
+end
+</code></p>
+
+<!--more-->
+
+
+<p>根据这个定义，如果在一个实例上调用了instance_eval，就可以在其中定义该实例的单态函数 singleton_method</p>
+
+<p>```ruby
+class A
+end</p>
+
+<p>a = A.new
+a.instance_eval do
+  self  # => a
+  # current class => a's singleton class
+  def method1</p>
+
+<pre><code>puts 'this is a singleton method of instance a'
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>a.method1</p>
+
+<h1>=> this is a singleton method of instance a</h1>
+
+<p>b = A.new
+b.method1</p>
+
+<h1>=>NoMethodError: undefined method `method1' for #&lt;A:0x10043ff70></h1>
+
+<p>```</p>
+
+<p>同样，因为<strong>类class本身也是Class类的一个实例</strong>，instance_eval也可以用在类上，这个时候就可以在其中定义该类的singleton_method，即为该类的类函数。</p>
+
+<p>换句话说，可以用instance_eval来定义类函数class method，这比较容易混淆，需要搞清楚。</p>
+
+<p>```ruby
+class A
+end</p>
+
+<p>A.instance_eval do
+  self  # => A
+  # current class => A's singleton class
+  def method1</p>
+
+<pre><code>puts 'this is a singleton method of class A'
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>A.method1</p>
+
+<h1>=> this is a singleton method of class A</h1>
+
+<p>class_eval
+```</p>
+
+<h3>class_eval</h3>
+
+<p>再来看<strong>class_eval</strong>，首先从名字可以得到的信息是，class_eval的调用者receiver必须是一个<strong>类</strong>，而在class_eval block的内部，self即为receiver类本身。</p>
+
+<p>```ruby
+class A
+end</p>
+
+<p>A.class_eval do
+  self  # => A
+  # current class => A
+end
+```</p>
+
+<p>根据这个定义，如果在一个类上调用了class_eval，就可以在其中定义该类的实例函数 instance_method</p>
+
+<p>```
+class A
+end</p>
+
+<p>a = A.new
+a.method1</p>
+
+<h1>=> NoMethodError: undefined method `method1' for #&lt;A:0x10043ff70></h1>
+
+<p>A.class_eval do
+  self  # => A
+  # current class => A
+  def method1</p>
+
+<pre><code>puts 'this is a instance method of class A'
+</code></pre>
+
+<p>  end
+end</p>
+
+<p>a.method1</p>
+
+<h1>=> this is a instance method of class A</h1>
+
+<p>```</p>
+
+<p>换句话说，可以用class_eval来定义实例函数instance method，这也比较容易混淆，需要搞清楚。</p>
+
+<h3>总结</h3>
+
+<p>instance_eval必须由instance来调用，可以用来定义单态函数singleton_methods</p>
+
+<p>class_eval必须是由class来调用，可以用来定义实例函数instance_methods</p>
+]]></content>
+  </entry>
+  
+</feed>
