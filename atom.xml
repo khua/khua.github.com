@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:45:41+08:00</updated>
+  <updated>2012-09-09T14:48:35+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -19,6 +19,91 @@
     <updated>2012-09-09T14:45:00+08:00</updated>
     <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
     <content type="html"><![CDATA[<h3>安装Redis</h3>
+
+<h4>(1) 下载Redis</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz
+</span><span class='line'>tar xzvf redis-2.2.11.tar.gz</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>(2) 编译并安装Redis</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>make && make install</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>(3) 复制并修改配置文件</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cp redis.conf /etc/redis.conf
+</span><span class='line'>vi /etc/redis.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意修改以下几项：</p>
+
+<!--more-->
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>daemonize yes
+</span><span class='line'>loglevel warning
+</span><span class='line'>logfile /var/log/redis.log
+</span><span class='line'>maxmemory 2GB</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(自行斟酌是不要开通Virtual Memory选项)</p>
+
+<h4>(4) 设置Redis-Server自动启动服务</h4>
+
+<p>上网下载启动脚本(<code>gist.github.com</code>，搜索<code>redis init.d</code>)，并简单修改</p>
+
+<p>(至少需要修改<code>redis</code>、<code>REDIS_CONF_FILE</code>)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>vi /etc/init.d/redisctl
+</span><span class='line'>chmod 755 redisctl
+</span><span class='line'>cp /etc/init.d/redisctl /etc/rc.d/init.d/redisctl \
+</span><span class='line'>&& ln -s /etc/init.d/redisctl /etc/rc.d/rc2.d/S90redisctl && ln -s /etc/init.d/redisctl /etc/rc.d/rc3.d/S90redisctl \
+</span><span class='line'>&& ln -s /etc/init.d/redisctl /etc/rc.d/rc4.d/S90redisctl && ln -s /etc/init.d/mongod /etc/rc.d/rc5.d/S90redisctl
+</span><span class='line'>chkconfig --add redisctl</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(5) 重新启动后可以测试redis-server是否正常启动</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>redis-cli set foo Bar
+</span><span class='line'>redis-cli get foo</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Redis自动启动脚本 (CentOS 5.6适用)</h3>
+
+<p>{% gist 3683015 %}</p>
+
+<h3>Redis自动启动脚本 (Ubuntu 10.04适用)</h3>
+
+<p>记得修改：</p>
+
+<p>(1) <code>—chuid group:user</code></p>
+
+<p>(2) <code>ln /etc/init.d/redisctl /etc/rc2.d/redisctl，重复rc3，rc4，rc5</code></p>
+
+<p>启动脚本：</p>
+
+<p>{% gist 3683021 %}</p>
 ]]></content>
   </entry>
   

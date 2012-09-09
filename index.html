@@ -9,8 +9,11 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="安装Redis
-">
+  <meta name="description" content="安装Redis (1) 下载Redis 1
+2
+wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz
+tar xzvf redis-2.2.11.tar.gz (2) 编译并安装Redis 1
+make && make install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,8 +99,37 @@
 
 
   <div class="entry-content"><h3>安装Redis</h3>
+
+<h4>(1) 下载Redis</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz
+</span><span class='line'>tar xzvf redis-2.2.11.tar.gz</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>(2) 编译并安装Redis</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>make && make install</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>(3) 复制并修改配置文件</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cp redis.conf /etc/redis.conf
+</span><span class='line'>vi /etc/redis.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意修改以下几项：</p>
+
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/">Read on &rarr;</a>
+    </footer>
   
 
 
