@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:09:37+08:00</updated>
+  <updated>2012-09-09T14:45:41+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安装Redis，并设置自动启动]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-09-09T14:45:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
+    <content type="html"><![CDATA[<h3>安装Redis</h3>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[安装mongodb，并设置自动启动]]></title>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Redis | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/redis/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:44:20+08:00</updated>
+  <updated>2012-09-09T14:45:41+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -15,81 +15,10 @@
   
   <entry>
     <title type="html"><![CDATA[安装Redis，并设置自动启动]]></title>
-    <link href="http://khua.github.com/blog/2012/09/08/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
-    <updated>2012-09-08T10:25:00+08:00</updated>
-    <id>http://khua.github.com/blog/2012/09/08/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
+    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-09-09T14:45:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-redis,bing-she-zhi-zi-dong-qi-dong</id>
     <content type="html"><![CDATA[<h3>安装Redis</h3>
-
-<h4>(1) 下载Redis</h4>
-
-<p><code>
-wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz
-tar xzvf redis-2.2.11.tar.gz
-</code></p>
-
-<h4>(2) 编译并安装Redis</h4>
-
-<p><code>
-make &amp;&amp; make install
-</code></p>
-
-<h4>(3) 复制并修改配置文件</h4>
-
-<p><code>
-cp redis.conf /etc/redis.conf
-vi /etc/redis.conf
-</code></p>
-
-<p>注意修改以下几项：</p>
-
-<!--more-->
-
-
-<p><code>
-daemonize yes
-loglevel warning
-logfile /var/log/redis.log
-maxmemory 2GB
-</code></p>
-
-<p>(自行斟酌是不要开通Virtual Memory选项)</p>
-
-<h4>(4) 设置Redis-Server自动启动服务</h4>
-
-<p>上网下载启动脚本(<code>gist.github.com</code>，搜索<code>redis init.d</code>)，并简单修改</p>
-
-<p>(至少需要修改<code>redis</code>、<code>REDIS_CONF_FILE</code>)</p>
-
-<p><code>
-vi /etc/init.d/redisctl
-chmod 755 redisctl
-cp /etc/init.d/redisctl /etc/rc.d/init.d/redisctl \
-&amp;&amp; ln -s /etc/init.d/redisctl /etc/rc.d/rc2.d/S90redisctl &amp;&amp; ln -s /etc/init.d/redisctl /etc/rc.d/rc3.d/S90redisctl \
-&amp;&amp; ln -s /etc/init.d/redisctl /etc/rc.d/rc4.d/S90redisctl &amp;&amp; ln -s /etc/init.d/mongod /etc/rc.d/rc5.d/S90redisctl
-chkconfig --add redisctl
-</code></p>
-
-<p>(5) 重新启动后可以测试redis-server是否正常启动</p>
-
-<p><code>redis-cli set foo Bar
-redis-cli get foo
-</code></p>
-
-<h3>Redis自动启动脚本 (CentOS 5.6适用)</h3>
-
-<p>{% gist 3683015 %}</p>
-
-<h3>Redis自动启动脚本 (Ubuntu 10.04适用)</h3>
-
-<p>记得修改：</p>
-
-<p>(1) <code>—chuid group:user</code></p>
-
-<p>(2) <code>ln /etc/init.d/redisctl /etc/rc2.d/redisctl，重复rc3，rc4，rc5</code></p>
-
-<p>启动脚本：</p>
-
-<p>{% gist 3683021 %}</p>
 ]]></content>
   </entry>
   

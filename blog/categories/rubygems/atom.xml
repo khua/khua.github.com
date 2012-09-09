@@ -4,7 +4,7 @@
   <title><![CDATA[Category: RubyGems | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:44:20+08:00</updated>
+  <updated>2012-09-09T14:45:41+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -284,7 +284,59 @@ gem push foo-1.0.0.gem #Deploy your gem instantly
 
 <h3>Top 50 Rubygems</h3>
 
-<p>{% gist 2015501 %}</p>
+<p><div><script src='https://gist.github.com/2015501.js?file='></script>
+<noscript><pre><code>Count	Gem
+7570	rack
+7444	rake
+7425	rails
+7424	activesupport
+7421	bundler
+7412	actionpack
+7410	actionmailer
+7409	activerecord
+7397	activeresource
+7326	mime-types
+7274	builder
+6787	i18n
+6547	rack-test
+6527	tzinfo
+6484	erubis
+6447	treetop
+6433	polyglot
+6386	mail
+6340	thor
+6269	railties
+6268	rack-mount
+6266	activemodel
+6261	arel
+5958	abstract
+5274	will_paginate
+4935	newrelic_rpm
+4597	nokogiri
+4458	haml
+4222	json
+3703	bcrypt-ruby
+3389	paperclip
+3372	daemons
+3335	warden
+3330	devise
+3224	aws-s3
+2939	xml-simple
+2931	hoptoad_notifier
+2834	rest-client
+2501	multi_json
+2482	jquery-rails
+2464	addressable
+2392	fastercsv
+2377	delayed_job
+2343	oauth
+2255	crack
+2189	authlogic
+2168	net-ssh
+2161	pg
+2090	orm_adapter
+2036	rdoc</code></pre></noscript></div>
+</p>
 ]]></content>
   </entry>
   
