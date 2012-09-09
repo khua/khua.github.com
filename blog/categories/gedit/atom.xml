@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Gedit | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/gedit/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T16:27:39+08:00</updated>
+  <updated>2012-09-09T16:28:33+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -42,7 +42,7 @@ fc-cache -f -v
 
 <p>打开gedit，选择<code>Edit -&gt; Preferences -&gt; Font &amp; Colors</code>，然后添加。</p>
 
-<!--mpore-->
+<!--more-->
 
 
 <h1>4 :安装文件浏览器插件</h1>
