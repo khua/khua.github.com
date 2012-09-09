@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T14:03:30+08:00</updated>
+  <updated>2012-09-09T14:09:37+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,233 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安装mongodb，并设置自动启动]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-mongodb%2Cbing-she-zhi-zi-dong-qi-dong/"/>
+    <updated>2012-09-09T14:08:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-mongodb,bing-she-zhi-zi-dong-qi-dong</id>
+    <content type="html"><![CDATA[<h3>Ubuntu环境下安装</h3>
+
+<p>Ubuntu环境下比较容易安装，可参考：</p>
+
+<p><a href="http://www.mongodb.org/display/DOCS/Ubuntu+and+Debian+packages">Ubuntu and Debian packages</a></p>
+
+<p>安装好后会自动配置。</p>
+
+<h3>CentOS环境下安装</h3>
+
+<h4>安装MongoDB</h4>
+
+<h5>(1) 查看系统位数</h5>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">getconf</span> <span class="no">LONG_BIT</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>(2) 编辑MongoDB的安装源</h5>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">vi</span> <span class="sr">/etc/</span><span class="n">yum</span><span class="o">.</span><span class="n">repos</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="mi">10</span><span class="n">gen</span><span class="o">.</span><span class="n">repo</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<h5>(3) 粘贴以下内容</h5>
+
+<p><strong>64位适用：</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">10</span><span class="n">gen</span><span class="o">]</span>
+</span><span class='line'><span class="nb">name</span><span class="o">=</span><span class="mi">10</span><span class="n">gen</span> <span class="no">Repository</span>
+</span><span class='line'><span class="n">baseurl</span><span class="o">=</span><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">downloads</span><span class="o">-</span><span class="n">distro</span><span class="o">.</span><span class="n">mongodb</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repo</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">os</span><span class="o">/</span><span class="n">x86_64</span>
+</span><span class='line'><span class="n">gpgcheck</span><span class="o">=</span><span class="mi">0</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>32位适用：</strong></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="o">[</span><span class="mi">10</span><span class="n">gen</span><span class="o">]</span>
+</span><span class='line'><span class="nb">name</span><span class="o">=</span><span class="mi">10</span><span class="n">gen</span> <span class="no">Repository</span>
+</span><span class='line'><span class="n">baseurl</span><span class="o">=</span><span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">downloads</span><span class="o">-</span><span class="n">distro</span><span class="o">.</span><span class="n">mongodb</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">repo</span><span class="o">/</span><span class="n">redhat</span><span class="o">/</span><span class="n">os</span><span class="o">/</span><span class="n">i686</span>
+</span><span class='line'><span class="n">gpgcheck</span><span class="o">=</span><span class="mi">0</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>(4) 安装mongo-10gen和mongo-10-gen-server</h5>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">mongo</span><span class="o">-</span><span class="mi">10</span><span class="n">gen</span> <span class="n">mongo</span><span class="o">-</span><span class="mi">10</span><span class="n">gen</span><span class="o">-</span><span class="n">server</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>(5) 设置mongoDB自动启动服务</h5>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">cp</span> <span class="sr">/etc/ini</span><span class="n">t</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">mongod</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">mongod</span>
+</span><span class='line'><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/etc/ini</span><span class="n">t</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">mongod</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rc3</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="no">S25mongod</span> <span class="o">&amp;&amp;</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="sr">/etc/ini</span><span class="n">t</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">mongod</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">rc5</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="no">S25mongod</span>
+</span><span class='line'><span class="n">chkconfig</span> <span class="err">—</span><span class="n">add</span> <span class="n">mongod</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>自动启动脚本</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#!/bin/bash</span>
+</span><span class='line'><span class="c1"># mongod - Startup script for mongod</span>
+</span><span class='line'><span class="c1"># chkconfig: 35 85 15</span>
+</span><span class='line'><span class="c1"># description: Mongo is a scalable, document-oriented database.</span>
+</span><span class='line'><span class="c1"># processname: mongod</span>
+</span><span class='line'><span class="c1"># config: /etc/mongod.conf</span>
+</span><span class='line'><span class="c1"># pidfile: /var/run/mongo/mongo.pid</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">.</span> <span class="sr">/etc/</span><span class="n">rc</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">init</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">functions</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1"># things from mongod.conf get there by mongod reading it</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">OPTIONS</span><span class="o">=</span><span class="s2">&quot; -f /etc/mongod.conf&quot;</span>
+</span><span class='line'><span class="no">SYSCONFIG</span><span class="o">=</span><span class="s2">&quot;/etc/sysconfig/mongod&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">mongod</span><span class="o">=</span><span class="err">$</span><span class="p">{</span><span class="no">MONGOD</span><span class="o">-/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">mongod</span><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="no">MONGO_USER</span><span class="o">=</span><span class="n">mongod</span>
+</span><span class='line'><span class="no">MONGO_GROUP</span><span class="o">=</span><span class="n">mongod</span>
+</span><span class='line'><span class="o">.</span> <span class="s2">&quot;$SYSCONFIG&quot;</span> <span class="o">||</span> <span class="kp">true</span>
+</span><span class='line'><span class="n">start</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">echo</span> <span class="o">-</span><span class="n">n</span> <span class="vg">$&quot;</span><span class="no">Starting</span> <span class="n">mongod</span><span class="p">:</span> <span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  daemon —user &quot;</span><span class="vg">$MONGO_USER</span><span class="s2">&quot; $mongod $OPTIONS</span>
+</span><span class='line'><span class="s2">  RETVAL=$?</span>
+</span><span class='line'><span class="s2">  echo</span>
+</span><span class='line'><span class="s2">  [ $RETVAL -eq 0 ] &amp;&amp; touch /var/lock/subsys/mongod</span>
+</span><span class='line'><span class="s2">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">stop()</span>
+</span><span class='line'><span class="s2">{</span>
+</span><span class='line'><span class="s2">  echo -n $&quot;</span><span class="no">Stopping</span> <span class="n">mongod</span><span class="p">:</span> <span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">  killproc -p /var/lib/mongo/mongod.lock -t30 -TERM /usr/bin/mongod</span>
+</span><span class='line'><span class="s2">  RETVAL=$?</span>
+</span><span class='line'><span class="s2">  echo</span>
+</span><span class='line'><span class="s2">  [ $RETVAL -eq 0 ] &amp;&amp; rm -f /var/lock/subsys/mongod</span>
+</span><span class='line'><span class="s2">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">restart () {</span>
+</span><span class='line'><span class="s2">        stop</span>
+</span><span class='line'><span class="s2">        start</span>
+</span><span class='line'><span class="s2">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">ulimit -n 12000</span>
+</span><span class='line'><span class="s2">RETVAL=0</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">case &quot;</span><span class="vg">$1</span><span class="s2">&quot; in</span>
+</span><span class='line'><span class="s2">  start)</span>
+</span><span class='line'><span class="s2">    start</span>
+</span><span class='line'><span class="s2">    ;;</span>
+</span><span class='line'><span class="s2">  stop)</span>
+</span><span class='line'><span class="s2">    stop</span>
+</span><span class='line'><span class="s2">    ;;</span>
+</span><span class='line'><span class="s2">  restart|reload|force-reload)</span>
+</span><span class='line'><span class="s2">    restart</span>
+</span><span class='line'><span class="s2">    ;;</span>
+</span><span class='line'><span class="s2">  condrestart)</span>
+</span><span class='line'><span class="s2">    [ -f /var/lock/subsys/mongod ] &amp;&amp; restart || :</span>
+</span><span class='line'><span class="s2">    ;;</span>
+</span><span class='line'><span class="s2">  status)</span>
+</span><span class='line'><span class="s2">    status $mongod</span>
+</span><span class='line'><span class="s2">    RETVAL=$?</span>
+</span><span class='line'><span class="s2">    ;;</span>
+</span><span class='line'><span class="s2">  *)</span>
+</span><span class='line'><span class="s2">    echo &quot;</span><span class="no">Usage</span><span class="p">:</span> <span class="vg">$0</span> <span class="p">{</span><span class="n">start</span><span class="o">|</span><span class="n">stop</span><span class="o">|</span><span class="n">status</span><span class="o">|</span><span class="n">restart</span><span class="o">|</span><span class="n">reload</span><span class="o">|</span><span class="n">force</span><span class="o">-</span><span class="n">reload</span><span class="o">|</span><span class="n">condrestart</span><span class="p">}</span><span class="s2">&quot;</span>
+</span><span class='line'><span class="s2">    RETVAL=1</span>
+</span><span class='line'><span class="s2">esac</span>
+</span><span class='line'>
+</span><span class='line'><span class="s2">exit $RETVAL</span>
+</span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[REST，资源和Rails]]></title>
