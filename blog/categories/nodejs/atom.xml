@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: NodeJS | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/nodejs/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2012-09-09T15:51:10+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[安装和测试Node.js]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/"/>
+    <updated>2012-09-09T15:49:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js</id>
+    <content type="html"><![CDATA[<h3>NodeJS，服务器端的JavaScript</h3>
+
+<p><img src="/images/nodejs.png" width="245" height="66" title="[Node.js]" ></p>
+
+<p>JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言:它可以使用在不同的上下文中,其能力与其他同类语言相比有过之而无不及。</p>
+
+<p>Node.js 事实上就是另外一种上下文,它允许在后端(脱离浏览器环境)运行 JavaScript 代码。要实现在后台运行 JavaScript 代码,代码需要先被解释然后正确的执行。Node.js 的原理正是如此,它使用了 <code>Google 的 V8 虚拟机</code>(Google 的 Chrome 浏览器使用的 JavaScript 执行环境),来解释和执行 JavaScript 代码。</p>
+
+<p>除此之外,伴随着 Node.js 的还有许多有用的模块,它们可以简化很多重复的劳作,比如向终端输出字符串。因此,Node.js 事实上既是一个运行时环境,同时又是一个库。要使用 Node.js, 首先需要进行安装。</p>
+
+<h3>安装Node.js</h3>
+
+<p><code>
+wget http://nodejs.org/dist/v0.6.12/node-v0.6.12.tar.gz
+tar xzvf node-v0.6.12.tar.gz
+cd node-v0.6.12
+./configure
+make &amp;&amp; make install
+</code></p>
+
+<!--more-->
+
+
+<h3>测试Node.js</h3>
+
+<ul>
+<li><p>查看node.js版本：<code>node -v</code></p></li>
+<li><p>测试 Hello World Script for Node.js：</p></li>
+</ul>
+
+
+<p>vim helloworld.js</p>
+
+<p><code>javascript
+var http = require('http');
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World\n');
+}).listen(1229, '127.0.0.1');
+console.log('Server running at http://127.0.0.1:1229/');
+</code></p>
+
+<p>系统会提示：<code>Server running at http://127.0.0.1:1229/</code>，打开浏览器输入<code>127.0.0.1:1229</code>就可以查看效果啦。</p>
+
+<ul>
+<li>或从https://github.com/ry/node_chat下载示例</li>
+</ul>
+
+
+<h3>通过NPM安装forever或juggernaut</h3>
+
+<ul>
+<li>安装npm (如果权限不够，可以将<code>sh</code>改为<code>sudo sh</code>)</li>
+</ul>
+
+
+<p><code>
+curl http://npmjs.org/install.sh | sh
+</code></p>
+
+<ul>
+<li>使用npm安装forever和juggernaut</li>
+</ul>
+
+
+<p><code>
+npm install forever -g
+npm install juggernaut -g
+</code></p>
+
+<ul>
+<li>在Rails中使用juggernaut</li>
+</ul>
+
+
+<p>在Gemfile中加入：<code>gem juggernaut</code></p>
+]]></content>
+  </entry>
+  
+</feed>

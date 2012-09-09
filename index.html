@@ -9,11 +9,7 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="安装Redis (1) 下载Redis 1
-2
-wget http://redis.googlecode.com/files/redis-2.2.11.tar.gz
-tar xzvf redis-2.2.11.tar.gz (2) 编译并安装Redis 1
-make && make install &hellip;">
+  <meta name="description" content="NodeJS，服务器端的JavaScript JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言: &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +65,71 @@ make && make install &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.js</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-09T15:49:00+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>NodeJS，服务器端的JavaScript</h3>
+
+<p><img src="/images/nodejs.png" width="245" height="66" title="[Node.js]" ></p>
+
+<p>JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言:它可以使用在不同的上下文中,其能力与其他同类语言相比有过之而无不及。</p>
+
+<p>Node.js 事实上就是另外一种上下文,它允许在后端(脱离浏览器环境)运行 JavaScript 代码。要实现在后台运行 JavaScript 代码,代码需要先被解释然后正确的执行。Node.js 的原理正是如此,它使用了 <code>Google 的 V8 虚拟机</code>(Google 的 Chrome 浏览器使用的 JavaScript 执行环境),来解释和执行 JavaScript 代码。</p>
+
+<p>除此之外,伴随着 Node.js 的还有许多有用的模块,它们可以简化很多重复的劳作,比如向终端输出字符串。因此,Node.js 事实上既是一个运行时环境,同时又是一个库。要使用 Node.js, 首先需要进行安装。</p>
+
+<h3>安装Node.js</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://nodejs.org/dist/v0.6.12/node-v0.6.12.tar.gz
+</span><span class='line'>tar xzvf node-v0.6.12.tar.gz
+</span><span class='line'>cd node-v0.6.12
+</span><span class='line'>./configure
+</span><span class='line'>make && make install</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -387,6 +448,10 @@ make && make install &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.js</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/09/an-zhuang-redis%2Cbing-she-zhi-zi-dong-qi-dong/">安装Redis，并设置自动启动</a>
       </li>
     
@@ -400,10 +465,6 @@ make && make install &hellip;">
     
       <li class="post">
         <a href="/blog/2012/09/09/ru-he-jian-li-zi-ji-de-rubygems/">如何建立自己的Rubygems</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/09/shou-lian-shi-yong-rubygems/">熟练使用RubyGems</a>
       </li>
     
   </ul>
