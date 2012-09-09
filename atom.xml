@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T15:53:22+08:00</updated>
+  <updated>2012-09-09T15:56:54+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,158 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Rails本地开发环境和远程部署环境搭建]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/"/>
+    <updated>2012-09-09T15:54:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian</id>
+    <content type="html"><![CDATA[<p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
+
+<p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>
+
+<h3>一、基于CentOS 5.6的部署环境</h3>
+
+<h4>1a. 设置远程登录</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh root@96.126.102.82</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Windows环境下，可以使用Putty进行远程连接，并通过修改<code>Apperance: Fixdays</code>及<code>Translation: UTF-8</code>，以正常显示中文。</p>
+
+<h4>1b. 设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2. 安装一些基本包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">gcc</span><span class="o">-</span><span class="n">c</span><span class="o">++</span> <span class="n">make</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">m4</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="mi">13</span>
+</span><span class='line'><span class="n">autoconf</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">65</span>
+</span><span class='line'><span class="n">automake</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">11</span>
+</span><span class='line'><span class="n">libtool</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="n">b</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
+
+<h4>4. 安装其它一些编译依赖的软件包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">zlib</span><span class="o">-</span><span class="n">devel</span> <span class="n">openssl</span><span class="o">-</span><span class="n">devel</span> <span class="n">perl</span> <span class="n">cpio</span> <span class="n">expat</span><span class="o">-</span><span class="n">devel</span> <span class="n">gettext</span><span class="o">-</span><span class="n">devel</span> <span class="n">curl</span> <span class="n">curl</span><span class="o">-</span><span class="n">devel</span> <span class="n">imake</span> <span class="n">libxml2</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">devel</span> <span class="n">libxslt</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">devel</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">wget</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">kernel</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">pub</span><span class="o">/</span><span class="n">software</span><span class="o">/</span><span class="n">scm</span><span class="o">/</span><span class="n">git</span><span class="o">/</span><span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</span><span class='line'><span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</span><span class='line'><span class="n">cd</span> <span class="n">git</span><span class="o">-</span><span class="mi">1</span><span class="o">.</span><span class="mi">7</span><span class="o">.</span><span class="mi">6</span>
+</span><span class='line'><span class="o">.</span><span class="n">/configure</span> <span class="o">--</span><span class="n">prefix</span><span class="o">=</span><span class="sr">/usr/</span><span class="n">local</span>
+</span><span class='line'><span class="n">make</span> <span class="o">&amp;&amp;</span> <span class="n">make</span> <span class="n">install</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>(后续步骤见第三部分)</p>
+
+<h3>二、基于Ubuntu 10.04 LTS的本地环境</h3>
+
+<h4>1.  设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2. 安装一些基本包</h4>
+
+<p>(make已经默认安装，3.81版)</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">m4</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">4</span><span class="o">.</span><span class="mi">13</span>
+</span><span class='line'><span class="n">autoconf</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">65</span>
+</span><span class='line'><span class="n">automake</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">11</span>
+</span><span class='line'><span class="n">libtool</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="o">.</span><span class="mi">2</span><span class="o">.</span><span class="mi">6</span><span class="n">b</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
+
+<h4>4. 安装其它一些编译依赖的软件包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">perl</span> <span class="n">cpio</span> <span class="n">libexpat1</span><span class="o">-</span><span class="n">dev</span> <span class="n">gettext</span> <span class="n">curl</span> <span class="n">libcurl4</span><span class="o">-</span><span class="n">gnutls</span><span class="o">-</span><span class="n">dev</span> <span class="n">xutils</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxml2</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxslt11</span><span class="o">.</span><span class="mi">1</span> <span class="p">(</span><span class="sc">?)</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libyaml</span><span class="o">-</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span> <span class="n">libyaml</span><span class="o">-</span><span class="n">dev</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">git</span><span class="o">-</span><span class="n">core</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>通用安装部分 (Ruby, MongoDB, redis, Coreseek, NodeJS)</h3>
+
+<h4>6. 安装Ruby 1.9.2 p290，并升级Rubygems</h4>
+
+<p>详见后续文章：安装Ruby 1.9.3 p125</p>
+
+<h4>7. 安装mongodb，并配置自动启动服务</h4>
+
+<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
+
+<h4>8. 安装redis，并配置自动启动服务</h4>
+
+<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
+
+<h4>9. 安装Coreseek 4.1 Beta</h4>
+
+<p>可选，详见后续文章：安装Coreseek 4.1版</p>
+
+<h4>10. 安装node.js，并使用npm管理安装</h4>
+
+<p>详见：<a href="http://topi.co/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.JS</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[安装和测试Node.js]]></title>

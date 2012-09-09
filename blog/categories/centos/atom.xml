@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: CentOS | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/centos/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2012-09-09T15:56:54+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Rails本地开发环境和远程部署环境搭建]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/"/>
+    <updated>2012-09-09T15:54:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian</id>
+    <content type="html"><![CDATA[<p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
+
+<p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>
+
+<h3>一、基于CentOS 5.6的部署环境</h3>
+
+<h4>1a. 设置远程登录</h4>
+
+<p><code>
+ssh root@96.126.102.82
+</code></p>
+
+<p>Windows环境下，可以使用Putty进行远程连接，并通过修改<code>Apperance: Fixdays</code>及<code>Translation: UTF-8</code>，以正常显示中文。</p>
+
+<h4>1b. 设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<p><code>ruby
+export LC_ALL = zh_CN.UTF8
+export LANG = zh_CN.UTF8
+</code></p>
+
+<h4>2. 安装一些基本包</h4>
+
+<p><code>
+yum install gcc g++ gcc-c++ make
+</code></p>
+
+<!--more-->
+
+
+<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
+
+<p><code>
+m4 &gt;= 1.4.13
+autoconf &gt;= 2.65
+automake &gt;= 1.11
+libtool &gt;= 2.2.6b
+</code></p>
+
+<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
+
+<h4>4. 安装其它一些编译依赖的软件包</h4>
+
+<p><code>
+yum install zlib-devel openssl-devel perl cpio expat-devel gettext-devel curl curl-devel imake libxml2 libxml2-devel libxslt libxslt-devel
+</code></p>
+
+<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
+
+<p><code>
+wget http://kernel.org/pub/software/scm/git/git-1.7.6.tar.gz
+tar -xzvf git-1.7.6.tar.gz
+cd git-1.7.6
+./configure --prefix=/usr/local
+make &amp;&amp; make install
+</code></p>
+
+<p>(后续步骤见第三部分)</p>
+
+<h3>二、基于Ubuntu 10.04 LTS的本地环境</h3>
+
+<h4>1.  设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<p><code>ruby
+export LC_ALL = zh_CN.UTF8
+export LANG = zh_CN.UTF8
+</code></p>
+
+<h4>2. 安装一些基本包</h4>
+
+<p>(make已经默认安装，3.81版)</p>
+
+<p><code>
+sudo apt-get install gcc g++
+</code></p>
+
+<h4>3. 手动安装m4, automake, autoconf, libtool指定版本</h4>
+
+<p><code>
+m4 &gt;= 1.4.13
+autoconf &gt;= 2.65
+automake &gt;= 1.11
+libtool &gt;= 2.2.6b
+</code></p>
+
+<p>这一步是为了安装Coreseek (Sphinx)，可选。</p>
+
+<h4>4. 安装其它一些编译依赖的软件包</h4>
+
+<p><code>
+sudo apt-get install zlib1g-dev libssl-dev perl cpio libexpat1-dev gettext curl libcurl4-gnutls-dev xutils-dev libxml2 libxml2-dev libxslt11.1 (?) libxslt-dev libreadline5-dev libyaml-0-2 libyaml-dev
+</code></p>
+
+<h4>5. 安装版本控制系统git (可选择安装最新版本)</h4>
+
+<p><code>
+sudo apt-get install git-core
+</code></p>
+
+<h3>通用安装部分 (Ruby, MongoDB, redis, Coreseek, NodeJS)</h3>
+
+<h4>6. 安装Ruby 1.9.2 p290，并升级Rubygems</h4>
+
+<p>详见后续文章：安装Ruby 1.9.3 p125</p>
+
+<h4>7. 安装mongodb，并配置自动启动服务</h4>
+
+<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
+
+<h4>8. 安装redis，并配置自动启动服务</h4>
+
+<p>详见后续文章：安装mongodb，并配置自动启动服务</p>
+
+<h4>9. 安装Coreseek 4.1 Beta</h4>
+
+<p>可选，详见后续文章：安装Coreseek 4.1版</p>
+
+<h4>10. 安装node.js，并使用npm管理安装</h4>
+
+<p>详见：<a href="http://topi.co/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.JS</a></p>
+]]></content>
+  </entry>
+  
+</feed>

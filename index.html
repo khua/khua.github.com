@@ -9,7 +9,7 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="NodeJS，服务器端的JavaScript JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言: &hellip;">
+  <meta name="description" content="前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。 (* 为了支持新的硬件，升级到了linux-header-2.6.32-38，用uname -r查看，显示3.0.0- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,77 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-09T15:54:00+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
+
+<p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>
+
+<h3>一、基于CentOS 5.6的部署环境</h3>
+
+<h4>1a. 设置远程登录</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ssh root@96.126.102.82</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Windows环境下，可以使用Putty进行远程连接，并通过修改<code>Apperance: Fixdays</code>及<code>Translation: UTF-8</code>，以正常显示中文。</p>
+
+<h4>1b. 设置locale <code>vim /etc/profile</code>，添加：</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>2. 安装一些基本包</h4>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">gcc</span><span class="o">-</span><span class="n">c</span><span class="o">++</span> <span class="n">make</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -448,6 +519,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/09/09/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/09/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.js</a>
       </li>
     
@@ -461,10 +536,6 @@
     
       <li class="post">
         <a href="/blog/2012/09/09/rest%2Czi-yuan-he-rails/">REST，资源和Rails</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/09/ru-he-jian-li-zi-ji-de-rubygems/">如何建立自己的Rubygems</a>
       </li>
     
   </ul>
