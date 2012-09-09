@@ -1,17 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: RubyGems | My Octopress Blog]]></title>
+  <title><![CDATA[Category: RubyGems | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/rubygems/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T10:43:23+08:00</updated>
+  <updated>2012-09-09T12:51:55+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[Kevin Hua]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何建立自己的Rubygems]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/ru-he-jian-li-zi-ji-de-rubygems/"/>
+    <updated>2012-09-09T12:50:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/ru-he-jian-li-zi-ji-de-rubygems</id>
+    <content type="html"><![CDATA[<h3>简单的示例：</h3>
+
+<p>以创建topico-0.0.1.gem为例：</p>
+
+<h4>建立文件夹</h4>
+
+<p><code>
+.
+├── lib
+│   └── topico.rb
+└── topico.gemspec
+</code></p>
+
+<p>注意：lib目录下必须有个和你gem名字一样的rb文件。</p>
+
+<!--more-->
+
+
+<h4>编写代码 <code>lib\topico.rb</code></h4>
+
+<p>```ruby
+class Topico
+  def self.hello</p>
+
+<pre><code>puts "Hello, RubyGems!"
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h4>编辑GemSpec文件 <code>topico.gemspec</code></h4>
+
+<p><code>ruby
+Gem::Specification.new do |s|
+  s.name        = 'topico'
+  s.version     = '0.0.1'
+  s.date        = '2012-03-11'
+  s.summary     = 'Greeting from Topico'
+  s.description = 'Topico shows a greeting to RubyGems'
+  s.authors     = 'Author Name'
+  s.email       = 'username@username.com'
+  s.files       = ["lib/topico.rb"]
+  s.homepage    = 'http://rubygems.org/gems/topico'
+end
+</code></p>
+
+<p>这里仅列出了较为常见的属性。</p>
+
+<h4>编译生成gem</h4>
+
+<p><code>
+$ gem build topico.gemspec
+</code></p>
+
+<p>系统会提示信息：</p>
+
+<p><code>
+  Successfully built RubyGem
+  Name: topico
+  Version: 0.0.1
+  File: topico-0.0.1.gem
+</code></p>
+
+<p>编译后可以查看文件夹结构 <code>tree</code></p>
+
+<p><code>
+.
+├── lib
+│   └── topico.rb
+├── topico-0.0.1.gem
+└── topico.gemspec
+</code></p>
+
+<p>注意新生成的<code>topico-0.0.1.gem</code></p>
+
+<h4>安装并测试gem</h4>
+
+<p>安装topico-0.0.1.gem</p>
+
+<p><code>
+$ gem install ./topico-0.0.1.gem
+</code></p>
+
+<p>系统会提示：</p>
+
+<p><code>
+Successfully installed topico-0.0.1
+1 gem installed
+Installing ri documentation for topico-0.0.1...
+Installing RDoc documentation for topico-0.0.1...
+</code></p>
+
+<p>在irb中测试使用 <code>irb</code>：</p>
+
+<p><code>
+irb(main):001:0&gt; require 'topico'
+=&gt; true
+irb(main):002:0&gt; Topico.hello
+Hello, RubyGems!
+=&gt; nil
+</code></p>
+
+<h4>发布到RugyGems网站</h4>
+
+<p>先设置RubyGems的用户名和密码：</p>
+
+<p>```
+$ curl -u username https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials
+Enter host password for user 'username':
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</p>
+
+<pre><code>                             Dload  Upload   Total   Spent    Left  Speed
+</code></pre>
+
+<p>  0    56    0    56    0     0     25      0 --:--:--  0:00:02 --:--:--   144
+```</p>
+
+<p>设置成功后发布：</p>
+
+<p><code>
+$ gem push topico-0.0.1.gem
+Pushing gem to https://rubygems.org...
+Successfully registered gem: topico (0.0.1)
+</code></p>
+
+<p>发布成功，这样大家都可以使用你的Rubygem啦。</p>
+
+<h3>稍微复杂一些的示例</h3>
+
+<p>下面看一下如何组织多个ruby文件。</p>
+
+<h4>目录结构</h4>
+
+<p><code>
+.
+├── lib
+│   ├── ext
+│   │   └── calculation.rb
+│   └── topico.rb
+└── topico.gemspec
+</code></p>
+
+<h4>编写GemSpec</h4>
+
+<p>在<code>s.files</code>一行，修改：</p>
+
+<p><code>
+  s.files       = ["lib/topico.rb", "lib/ext/calculation.rb"]
+</code></p>
+
+<p>重新gem build即可。</p>
+
+<h3>如何在Gem中包含可执行该件</h3>
+
+<h4>在插件目录下，建立bin文件夹：</h4>
+
+<p>生成可执行该件，并且将权限修改为可运行。</p>
+
+<p><code>
+$ mkdir bin
+$ touch bin/greeting
+$ chmod a+x bin/greeting
+</code></p>
+
+<h4>修改可执行文件内容</h4>
+
+<p>```</p>
+
+<h1>!/usr/bin/env ruby</h1>
+
+<p>require 'topico'
+puts Topico.hello
+```</p>
+
+<h4>修改GemSpec,添加一行<code>s.executables</code></h4>
+
+<p><code>
+  s.executables &lt;&lt; 'greeting'
+</code></p>
+
+<p>本文参考：<a href="http://blog.csdn.net/kucss/article/details/7163563">如何创建自己的Ruby Gem包</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[熟练使用RubyGems]]></title>
