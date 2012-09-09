@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T16:11:38+08:00</updated>
+  <updated>2012-09-09T16:20:55+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[博客新生]]></title>
+    <link href="http://khua.github.com/blog/2012/09/09/bo-ke-xin-sheng/"/>
+    <updated>2012-09-09T16:13:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/09/bo-ke-xin-sheng</id>
+    <content type="html"><![CDATA[<p>今年2月，用Octopress为自己搭建了一个博客。3月份的某天，因为不小心push错，懒得从头再来，就将一些文章上传到 Ruby-China。一是方便自己回顾，另外也方便跟我一样的初学者。</p>
+
+<p>最近又有写博的冲动，重新享受 <code>rake new_post</code> 和 <code>rake gen_deploy</code> 的乐趣。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[采用Nginx和Passenger部署Rails应用]]></title>
