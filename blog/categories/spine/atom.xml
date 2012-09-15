@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Spine | TOPI.CO]]></title>
   <link href="http://khua.github.com/blog/categories/spine/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-15T19:53:26+08:00</updated>
+  <updated>2012-09-15T19:54:36+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -30,6 +30,9 @@
 <li>页面展现层 (Web Presentation Layer) - 我们是在编写网页应用，我希望框架提供原生-样式的Widgets。没有理由每个框架都创建自己的布局管理器。HTML和CSS已经足够，框架必须围绕这一概念。</li>
 <li>兼容其它 (Plays Nicely With Others) - 我们需要面对这一点，jQuery 令人震惊。我不希望某个框架集成jQuery的一个子集，我希望框架推荐使用jQuery本身。</li>
 </ul>
+
+
+<!--more-->
 
 
 <h3>竞争者 (The Contenders)</h3>
