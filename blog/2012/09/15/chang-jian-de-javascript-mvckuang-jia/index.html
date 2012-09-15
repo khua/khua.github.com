@@ -1,0 +1,341 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>常见的JavaScript MVC框架 - TOPI.CO</title>
+  <meta name="author" content="Kevin Hua">
+
+  
+  <meta name="description" content="翻译比较粗糙，原汁原味的英文请参考：The Top 12 Javascript MVC Frameworks Reviewed 在过去的几个月里，我一直在搜寻完美的JavaScript MVC框架。我希望这个框架概念化和各项特性都比较合理。最终我筛选出了一些框架，下面是对每个框架的简明扼要的概括。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://khua.github.com/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="TOPI.CO" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TOPI.CO</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:khua.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">常见的JavaScript MVC框架</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-15T17:24:00+08:00" pubdate data-updated="true">Sep 15<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>翻译比较粗糙，原汁原味的英文请参考：<a href="http://codebrief.com/2012/01/the-top-10-javascript-mvc-frameworks-reviewed/">The Top 12 Javascript MVC Frameworks Reviewed</a></p>
+
+<p>在过去的几个月里，我一直在搜寻完美的JavaScript MVC框架。我希望这个框架概念化和各项特性都比较合理。最终我筛选出了一些框架，下面是对每个框架的简明扼要的概括。在最后，我会告诉你我自己的最终决策。</p>
+
+<p>特别地，下面四个特性对于我来说非常重要：</p>
+
+<ul>
+<li>界面绑定 (UI Bindings) - 不仅是模板层的绑定，我希望构成基础的模型发生改变时，可以自动更新视图层 (即模型层和视图层的绑定)。</li>
+<li>视图排版 (Composed Views) - 与所有软件开发者一样，我享受创建模块化、可复用的代码。基于这个原因，在编写界面时，我希望可以对视图进行排版 (最好在模板层面)。应该提供丰富的视图层次结构。一个很好的例子就是可以复用的分页Widget。</li>
+<li>页面展现层 (Web Presentation Layer) - 我们是在编写网页应用，我希望框架提供原生-样式的Widgets。没有理由每个框架都创建自己的布局管理器。HTML和CSS已经足够，框架必须围绕这一概念。</li>
+<li>兼容其它 (Plays Nicely With Others) - 我们需要面对这一点，jQuery 令人震惊。我不希望某个框架集成jQuery的一个子集，我希望框架推荐使用jQuery本身。</li>
+</ul>
+
+
+<h3>竞争者 (The Contenders)</h3>
+
+<p>下表是支持上述4个特性的JavaScript MVC框架：</p>
+
+<p>Framework   UI Bindings Composed Views  Web Presentation Layer  Plays Nicely With Others</p>
+
+<table>
+<tr>
+<td>框架<br>Framework</td>
+<td>界面绑定<br>UI Bindings</td>
+<td>视图排版<br>Composed Views</td>
+<td>页面展现层<br>Web Presentation Layer</td>
+<td>兼容其它<br>Plays Nicely w/ Others</td>
+</tr>
+<tr>
+<td>Backbone.js</td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>SproutCore 1.x</td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Sammy.js</td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Spine.js</td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Cappuccino</td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Knockout.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Javascript MVC</td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Google Web Toolkit</td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Google Closure</td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Ember.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Angular.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Batman.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+</table>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Kevin Hua</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-15T17:24:00+08:00" pubdate data-updated="true">Sep 15<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/backbone/'>Backbone</a>, <a class='category' href='/blog/categories/ember/'>Ember</a>, <a class='category' href='/blog/categories/javascript/'>JavaScript</a>, <a class='category' href='/blog/categories/mvc/'>MVC</a>, <a class='category' href='/blog/categories/spine/'>Spine</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/" title="Previous Post: 编辑器大作战——Sublime Text 2">&laquo; 编辑器大作战——Sublime Text 2</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/">常见的JavaScript MVC框架</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/">编辑器大作战——Sublime Text 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/">改造你的 Gedit，轻松打造类 TextMate 编辑器</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/bo-ke-xin-sheng/">博客新生</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/03/19/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">采用Nginx和Passenger部署Rails应用</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Kevin Hua -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'topico';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://khua.github.com/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/';
+        var disqus_url = 'http://khua.github.com/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

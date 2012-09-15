@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-09T17:24:49+08:00</updated>
+  <updated>2012-09-15T19:53:26+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,128 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[常见的JavaScript MVC框架]]></title>
+    <link href="http://khua.github.com/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/"/>
+    <updated>2012-09-15T17:24:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia</id>
+    <content type="html"><![CDATA[<p>翻译比较粗糙，原汁原味的英文请参考：<a href="http://codebrief.com/2012/01/the-top-10-javascript-mvc-frameworks-reviewed/">The Top 12 Javascript MVC Frameworks Reviewed</a></p>
+
+<p>在过去的几个月里，我一直在搜寻完美的JavaScript MVC框架。我希望这个框架概念化和各项特性都比较合理。最终我筛选出了一些框架，下面是对每个框架的简明扼要的概括。在最后，我会告诉你我自己的最终决策。</p>
+
+<p>特别地，下面四个特性对于我来说非常重要：</p>
+
+<ul>
+<li>界面绑定 (UI Bindings) - 不仅是模板层的绑定，我希望构成基础的模型发生改变时，可以自动更新视图层 (即模型层和视图层的绑定)。</li>
+<li>视图排版 (Composed Views) - 与所有软件开发者一样，我享受创建模块化、可复用的代码。基于这个原因，在编写界面时，我希望可以对视图进行排版 (最好在模板层面)。应该提供丰富的视图层次结构。一个很好的例子就是可以复用的分页Widget。</li>
+<li>页面展现层 (Web Presentation Layer) - 我们是在编写网页应用，我希望框架提供原生-样式的Widgets。没有理由每个框架都创建自己的布局管理器。HTML和CSS已经足够，框架必须围绕这一概念。</li>
+<li>兼容其它 (Plays Nicely With Others) - 我们需要面对这一点，jQuery 令人震惊。我不希望某个框架集成jQuery的一个子集，我希望框架推荐使用jQuery本身。</li>
+</ul>
+
+
+<h3>竞争者 (The Contenders)</h3>
+
+<p>下表是支持上述4个特性的JavaScript MVC框架：</p>
+
+<p>Framework   UI Bindings Composed Views  Web Presentation Layer  Plays Nicely With Others</p>
+
+<table>
+<tr>
+<td>框架<br>Framework</td>
+<td>界面绑定<br>UI Bindings</td>
+<td>视图排版<br>Composed Views</td>
+<td>页面展现层<br>Web Presentation Layer</td>
+<td>兼容其它<br>Plays Nicely w/ Others</td>
+</tr>
+<tr>
+<td>Backbone.js</td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>SproutCore 1.x</td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Sammy.js</td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Spine.js</td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Cappuccino</td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Knockout.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Javascript MVC</td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Google Web Toolkit</td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Google Closure</td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+</tr>
+<tr>
+<td>Ember.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Angular.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+<tr>
+<td>Batman.js</td>
+<td><font color="green">Y</font></td>
+<td><font color="red">N</font></td>
+<td><font color="green">Y</font></td>
+<td><font color="green">Y</font></td>
+</tr>
+</table>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[编辑器大作战——Sublime Text 2]]></title>
