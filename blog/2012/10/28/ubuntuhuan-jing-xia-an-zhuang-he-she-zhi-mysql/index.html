@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>编辑器大作战——Sublime Text 2 - TOPI.CO</title>
+  <title>Ubuntu环境下安装和设置MySQL - TOPI.CO</title>
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="推荐Lucifr和JerryQu的几篇博文： Sublime Text 2 入门及技巧 Sublime Text 2 实用快捷键 Sublime Text2：超赞的现代编辑器 一些必不可少的Sublime Text 2插件 下面还有几篇博文： (1) Sublime Text 2 小技巧和小诀窍 &hellip;">
+  <meta name="description" content="最近在学习一些JavaScript MVC框架，模型与数据Persistence交互时，通常都使用&#8221;ID&#8221;作为Primary Key，所以使用MongoDB有诸多不变，决定还是用回MySQL。 在Ubuntu下安装MySQL 1
+$ sudo apt-get install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://khua.github.com/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/">
+  <link rel="canonical" href="http://khua.github.com/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -68,7 +69,7 @@
   
   <header>
     
-      <h1 class="entry-title">编辑器大作战——Sublime Text 2</h1>
+      <h1 class="entry-title">Ubuntu环境下安装和设置MySQL</h1>
     
     
       <p class="meta">
@@ -84,73 +85,42 @@
   
 
 
-<time datetime="2012-09-09T16:33:00+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2012</time>
+<time datetime="2012-10-28T10:33:00+08:00" pubdate data-updated="true">Oct 28<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>推荐Lucifr和JerryQu的几篇博文：</p>
+<div class="entry-content"><p>最近在学习一些JavaScript MVC框架，模型与数据Persistence交互时，通常都使用&#8221;ID&#8221;作为Primary Key，所以使用MongoDB有诸多不变，决定还是用回MySQL。</p>
 
-<p><a href="http://lucifr.com/139225/sublime-text-2-tricks-and-tips/">Sublime Text 2 入门及技巧</a></p>
+<h3>在Ubuntu下安装MySQL</h3>
 
-<p><a href="http://lucifr.com/139235/sublime-text-2-useful-shortcuts/">Sublime Text 2 实用快捷键</a></p>
-
-<p><a href="http://www.imququ.com/post/i_love_sublime-text-2.html">Sublime Text2：超赞的现代编辑器</a></p>
-
-<p><a href="http://www.qianduan.net/essential-to-sublime-the-text-2-plugins.html">一些必不可少的Sublime Text 2插件</a></p>
-
-<p>下面还有几篇博文：</p>
-
-<p>(1) <a href="http://ihacklog.com/software/development-tool/sublime-text-2-tips-and-tricks.html#toc-E4.BD.BF.E7.94.A8Command-Palette">Sublime Text 2 小技巧和小诀窍</a></p>
-
-<p>Key Points:</p>
-
-<p>快如闪电查找文件：<code>Ctrl + P</code></p>
-
-<p>方法查找或行定位(用在Ctrl + P后)：<code>@ / # /</code></p>
-
-<p>快捷命令板：<code>Ctrl + Shift + P</code></p>
-
-<p>控制台：Ctrl + `</p>
-
-<p>包控制：<code>Package Control</code></p>
-
-<p>快速代码书写：<code>Zen Coding</code></p>
-
-<p>对齐(<code>Ctrl + Alt + A</code>)：<code>Alignment</code></p>
-
-<p>无干扰编辑：<code>Shift + F11</code></p>
-
-<!--more-->
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install mysql-server</span></code></pre></td></tr></table></div></figure>
 
 
-<p>(2) <a href="http://lucifr.com/139225/sublime-text-2-tricks-and-tips/?replytocom=122286#icon">Sublime Text 2 入门及技巧 (该博文编排较为美观)</a></p>
+<p>在安装时会提示为<code>root</code>用户创建密码。</p>
 
-<p>(前面文章叙述过的，不再重复)</p>
+<h3>简单地设置MySQL</h3>
 
-<p>多重选择：(按着CTRL不放)</p>
+<p>安装后，MySQL会自动设置启动服务，并将一些配置文件存放在<code>/etc/mysql</code>下。可以编辑<code>my.cnf</code>、<code>debian.cnf</code>以及<code>conf.d</code>文件夹下的配置文件。</p>
 
-<p>缩进指示：(已集成至Sublime Text 2)</p>
+<p>在终端输入</p>
 
-<p>Vim Vintage模式：快捷命令板，选择Preferences: Settings - User，然后加入：</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mysql -u root -p</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后输入安装时设置的密码。进入MySQL的后，可以创建数据库，并设定权限，具体命令如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>"ignored_packages": [],
-</span><span class='line'>"vintage_start_in_command_mode": true</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql &gt; CREATE DATABASE_NAME;
+</span><span class='line'>mysql &gt; GRANT ALL PRIVILEGES on DATABASE_NAME.* TO USERNAME@localhost IDENTIFIED BY "PASSWORD";</span></code></pre></td></tr></table></div></figure>
 
 
-<p>支持一些 TextMate 的 Bundle，可以直接移植过来。</p>
 
-<p>命令行工具</p>
-
-<p>(3) <a href="http://hhuai.github.com/blog/2012/01/08/sublime-text-intro/">Sublime Text2 快速上手</a></p>
-
-<p>装上Textmate中那个酷酷的[RailsCast主题]</p>
-
-<p>(4) <a href="http://www.cnblogs.com/yingzi/archive/2012/04/24/2469056.html">sublime 使用技巧总结</a></p>
 </div>
 
 
@@ -173,12 +143,12 @@
   
 
 
-<time datetime="2012-09-09T16:33:00+08:00" pubdate data-updated="true">Sep 9<span>th</span>, 2012</time>
+<time datetime="2012-10-28T10:33:00+08:00" pubdate data-updated="true">Oct 28<span>th</span>, 2012</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/sublime-text/'>Sublime Text</a>, <a class='category' href='/blog/categories/textmate/'>TextMate</a>
+    <a class='category' href='/blog/categories/mysql/'>MySQL</a>
   
 </span>
 
@@ -194,10 +164,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/" title="Previous Post: 改造你的 Gedit，轻松打造类 TextMate 编辑器">&laquo; 改造你的 Gedit，轻松打造类 TextMate 编辑器</a>
+        <a class="basic-alignment left" href="/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/" title="Previous Post: 常见的JavaScript MVC框架">&laquo; 常见的JavaScript MVC框架</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/" title="Next Post: 常见的JavaScript MVC框架">常见的JavaScript MVC框架 &raquo;</a>
       
     </p>
   </footer>
@@ -264,8 +232,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://khua.github.com/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/';
-        var disqus_url = 'http://khua.github.com/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/';
+        var disqus_identifier = 'http://khua.github.com/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/';
+        var disqus_url = 'http://khua.github.com/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/';
         var disqus_script = 'embed.js';
       
     (function () {

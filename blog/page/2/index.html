@@ -9,14 +9,7 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="简单的示例： 以创建topico-0.0.1.gem为例： 建立文件夹 1
-2
-3
-4
-.
-├── lib
-│ └── topico.rb
-└── topico.gemspec 注意：lib目录下必须有个和你gem名字一样的rb文件。 ">
+  <meta name="description" content="具备表象状态迁移(Representational State Transfer, REST)或称为表象化状态迁移。它代表了分布式超媒体系统的体系结构风格，该风格中是Roy Fielding在论文中定义。REST在系统中加入一系列的限制，为确保极大的可扩展性。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +65,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/12/rest%2Czi-yuan-he-rails/">REST，资源和Rails</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-12T21:39:00+08:00" pubdate data-updated="true">Mar 12<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>具备表象状态迁移(Representational State Transfer, REST)或称为表象化状态迁移。它代表了分布式超媒体系统的体系结构风格，该风格中是Roy Fielding在论文中定义。REST在系统中加入一系列的限制，为确保极大的可扩展性。虽然REST定义了大量的重要体系结构限制(例如将用户接口和服务器实现的清晰分离、无状态、以及缓存能力)。REST关键的特有能力是统一接口的要求。REST接口是由HTTP接口定义的，支持GET/POST/PUT/DELETE。这种统一接口限制，跟面向服务的体系结构(Service-Oriented Architecture, SOA)相反，后者为每种类型的服务定义了不同的接口。</p>
+
+<p>REST构架风格具有以下设计准则：</p>
+
+<ul>
+<li>网络上的所有事物都抽象为资源(resources = data + representation)</li>
+<li>每个资源都对应一个唯一的资源标识(resources identifier = url)</li>
+<li>通过连接器(generic connector interface)对资源进行操作(generic connector = HTTP Protocol 即GET/POST/PUT/DELETE)
+＊ 对资源的各种操作不会改变资源标识(对资源的GET操作不改变资源的状态)</li>
+<li>所有操作都是无状态的(stateless)</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/03/12/rest%2Czi-yuan-he-rails/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -266,6 +311,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/">Ubuntu环境下安装和设置MySQL</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/">常见的JavaScript MVC框架</a>
       </li>
     
@@ -279,10 +328,6 @@
     
       <li class="post">
         <a href="/blog/2012/09/09/bo-ke-xin-sheng/">博客新生</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/03/19/cai-yong-nginxhe-passengerbu-shu-railsying-yong/">采用Nginx和Passenger部署Rails应用</a>
       </li>
     
   </ul>

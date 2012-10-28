@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-09-15T19:54:36+08:00</updated>
+  <updated>2012-10-28T10:42:19+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu环境下安装和设置MySQL]]></title>
+    <link href="http://khua.github.com/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/"/>
+    <updated>2012-10-28T10:33:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql</id>
+    <content type="html"><![CDATA[<p>最近在学习一些JavaScript MVC框架，模型与数据Persistence交互时，通常都使用&#8221;ID&#8221;作为Primary Key，所以使用MongoDB有诸多不变，决定还是用回MySQL。</p>
+
+<h3>在Ubuntu下安装MySQL</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt-get install mysql-server</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在安装时会提示为<code>root</code>用户创建密码。</p>
+
+<h3>简单地设置MySQL</h3>
+
+<p>安装后，MySQL会自动设置启动服务，并将一些配置文件存放在<code>/etc/mysql</code>下。可以编辑<code>my.cnf</code>、<code>debian.cnf</code>以及<code>conf.d</code>文件夹下的配置文件。</p>
+
+<p>在终端输入</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mysql -u root -p</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后输入安装时设置的密码。进入MySQL的后，可以创建数据库，并设定权限，具体命令如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>mysql &gt; CREATE DATABASE_NAME;
+</span><span class='line'>mysql &gt; GRANT ALL PRIVILEGES on DATABASE_NAME.* TO USERNAME@localhost IDENTIFIED BY "PASSWORD";</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[常见的JavaScript MVC框架]]></title>
