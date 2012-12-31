@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>在Heroku上配置Unicorn应用 - TOPI.CO</title>
+  <meta name="author" content="Kevin Hua">
+
+  
+  <meta name="description" content="2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！ 翻译自： http://kzk9.net/archive/7/2012 我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="TOPI.CO" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TOPI.CO</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:khua.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">在Heroku上配置Unicorn应用</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-31T10:49:00+08:00" pubdate data-updated="true">Dec 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><code>2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！</code></p>
+
+<p><strong>翻译自：</strong> http://kzk9.net/archive/7/2012</p>
+
+<p>我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间，我们不断增强应用程序的部署配置。这篇文章展示了如何在Heroku上部署Unicorn，并且使应用性能更好和更稳定。</p>
+
+<h3>Unicorn是什么?</h3>
+
+<p>Unicorn 是Ruby Http 服务器，它启动一个主进程(master process)，监听特定的端口，并且发起(fork)几个工作进程(worker process)。每次来自客户端的请求(client request)，都由主进程传递给(handed)工作进程，当请求完成后，主进程再返回客户端。因此，只需监听1个端口，但能处理几个并行的请求。</p>
+
+<h3>Gemfile</h3>
+
+<p>为获得性能，我们使用OobGC (Out-of-bound GC 的缩写)。这使我们能够在处理用户请求时避免垃圾回收 (garbage collection, GC)。反而，GC发生在请求之外。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem "unicorn", "~&gt; 4.3.1"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<h3>Procfile</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>web: bundle exec unicorn -c lib/unicorn/config.rb -p $PORT</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>lib/unicorn/config.rb</h3>
+
+<p>&#8216;preload_app&#8217;配置用于快速应用部署。每个赛道(single dyno)，我们有4个工作进程。这表示1个进程最大能有128M内存，因为每个赛道(single dyno)只有512M内存。内存的限制由unicorn_killer.rb来配置，下面我们会详细介绍。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># What the timeout for killing busy workers is, in seconds
+</span><span class='line'>timeout 60
+</span><span class='line'>
+</span><span class='line'># Whether the app should be pre-loaded
+</span><span class='line'>preload_app true
+</span><span class='line'>
+</span><span class='line'># How many worker processes
+</span><span class='line'>worker_processes 4
+</span><span class='line'>
+</span><span class='line'># before/after forks
+</span><span class='line'>before_fork do |server, worker|
+</span><span class='line'>  sleep 1
+</span><span class='line'>end
+</span><span class='line'>after_fork do |server, worker|
+</span><span class='line'>  GC.disable
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config.ru</h3>
+
+<p>使用OobGC 和 unicorn_killer.rb 来限制最大内存使用。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Unicorn self-process killer
+</span><span class='line'>require ::File.expand_path('../lib/unicorn/unicorn_killer',  __FILE__)
+</span><span class='line'>use UnicornKiller::MaxRequests, 10240 + Random.rand(10240)
+</span><span class='line'>use UnicornKiller::Oom, 96 * 1024 + Random.rand(32) * 1024
+</span><span class='line'>
+</span><span class='line'># Out-Of-Band GC
+</span><span class='line'>require 'unicorn/oob_gc'
+</span><span class='line'>use Unicorn::OobGC</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>lib/unicorn/unicorn_killer.rb</h3>
+
+<p>这个Rack中间件(rack middleware)使你能够终止(kill)浪费内存(memory-fat)的进程，这样可以避免在一个单一赛道里交换(swapping)。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># from https://gist.github.com/1258681
+</span><span class='line'># # your config.ru
+</span><span class='line'># require 'unicorn_killer'
+</span><span class='line'># use UnicornKiller::MaxRequests, 1000
+</span><span class='line'># use UnicornKiller::Oom, 400 * 1024
+</span><span class='line'>
+</span><span class='line'>module UnicornKiller
+</span><span class='line'>  module Kill
+</span><span class='line'>    def quit
+</span><span class='line'>      sec = (Time.now - @process_start).to_i
+</span><span class='line'>      warn "#{self.class} send SIGQUIT (pid: #{Process.pid})\talive: #{sec} sec"
+</span><span class='line'>      Process.kill :QUIT, Process.pid 
+</span><span class='line'>    end
+</span><span class='line'>  end 
+</span><span class='line'>
+</span><span class='line'>  class Oom
+</span><span class='line'>    include Kill
+</span><span class='line'>
+</span><span class='line'>    def initialize(app, memory_size= 512 * 1024, check_cycle = 16)
+</span><span class='line'>      @app = app
+</span><span class='line'>      @memory_size = memory_size
+</span><span class='line'>      @check_cycle = check_cycle
+</span><span class='line'>      @check_count = 0
+</span><span class='line'>    end 
+</span><span class='line'>
+</span><span class='line'>    def rss
+</span><span class='line'>      `ps -o rss= -p #{Process.pid}`.to_i
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def call(env)
+</span><span class='line'>      @process_start ||= Time.now
+</span><span class='line'>      if (@check_count += 1) % @check_cycle == 0
+</span><span class='line'>        @check_count = 0
+</span><span class='line'>        quit if rss &gt; @memory_size
+</span><span class='line'>      end
+</span><span class='line'>      @app.call env
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  class MaxRequests
+</span><span class='line'>    include Kill
+</span><span class='line'>
+</span><span class='line'>    def initialize(app, max_requests = 1000)
+</span><span class='line'>      @app = app 
+</span><span class='line'>      @max_requests = max_requests
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def call(env)
+</span><span class='line'>      @process_start ||= Time.now
+</span><span class='line'>      quit if (@max_requests -= 1) == 0
+</span><span class='line'>      @app.call env
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>结论</h3>
+
+<p>通过配置，我们实现了 1) 单一赛道里的并行进程；2) 场外垃圾回收(out-of-bound GC)； 3) 避免交换(swap)； 4) 快速程序加载。这值得为所有在Heroku上应用部署人员推荐。希望能帮到大家。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Kevin Hua</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-31T10:49:00+08:00" pubdate data-updated="true">Dec 31<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/heroku/'>Heroku</a>, <a class='category' href='/blog/categories/unicorn/'>Unicorn</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/" title="Previous Post: Ubuntu环境下安装和设置MySQL">&laquo; Ubuntu环境下安装和设置MySQL</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">在Heroku上配置Unicorn应用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/">Ubuntu环境下安装和设置MySQL</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/">常见的JavaScript MVC框架</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/">编辑器大作战——Sublime Text 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/">改造你的 Gedit，轻松打造类 TextMate 编辑器</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Kevin Hua -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'topico';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/';
+        var disqus_url = 'http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

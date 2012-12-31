@@ -9,8 +9,7 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="最近在学习一些JavaScript MVC框架，模型与数据Persistence交互时，通常都使用&#8221;ID&#8221;作为Primary Key，所以使用MongoDB有诸多不变，决定还是用回MySQL。 在Ubuntu下安装MySQL 1
-$ sudo apt-get install &hellip;">
+  <meta name="description" content="2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！ 翻译自： http://kzk9.net/archive/7/2012 我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +65,65 @@ $ sudo apt-get install &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">在Heroku上配置Unicorn应用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-31T10:49:00+08:00" pubdate data-updated="true">Dec 31<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！</code></p>
+
+<p><strong>翻译自：</strong> http://kzk9.net/archive/7/2012</p>
+
+<p>我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间，我们不断增强应用程序的部署配置。这篇文章展示了如何在Heroku上部署Unicorn，并且使应用性能更好和更稳定。</p>
+
+<h3>Unicorn是什么?</h3>
+
+<p>Unicorn 是Ruby Http 服务器，它启动一个主进程(master process)，监听特定的端口，并且发起(fork)几个工作进程(worker process)。每次来自客户端的请求(client request)，都由主进程传递给(handed)工作进程，当请求完成后，主进程再返回客户端。因此，只需监听1个端口，但能处理几个并行的请求。</p>
+
+<h3>Gemfile</h3>
+
+<p>为获得性能，我们使用OobGC (Out-of-bound GC 的缩写)。这使我们能够在处理用户请求时避免垃圾回收 (garbage collection, GC)。反而，GC发生在请求之外。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem "unicorn", "~&gt; 4.3.1"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -630,71 +688,6 @@ $ sudo apt-get install &hellip;">
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/15/an-zhuang-he-ce-shi-node-dot-js/">安装和测试Node.js</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-15T22:24:00+08:00" pubdate data-updated="true">Mar 15<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>NodeJS，服务器端的JavaScript</h3>
-
-<p><img src="/images/nodejs.png" width="245" height="66" title="[Node.js]" ></p>
-
-<p>JavaScript 最早是运行在浏览器中,然而浏览器只是提供了一个上下文，它定义了使用 JavaScript 可以做什么,但并没有“说”太多关于 JavaScript 语言本身可以做什么。事实上, JavaScript 是一门“完整”的语言:它可以使用在不同的上下文中,其能力与其他同类语言相比有过之而无不及。</p>
-
-<p>Node.js 事实上就是另外一种上下文,它允许在后端(脱离浏览器环境)运行 JavaScript 代码。要实现在后台运行 JavaScript 代码,代码需要先被解释然后正确的执行。Node.js 的原理正是如此,它使用了 <code>Google 的 V8 虚拟机</code>(Google 的 Chrome 浏览器使用的 JavaScript 执行环境),来解释和执行 JavaScript 代码。</p>
-
-<p>除此之外,伴随着 Node.js 的还有许多有用的模块,它们可以简化很多重复的劳作,比如向终端输出字符串。因此,Node.js 事实上既是一个运行时环境,同时又是一个库。要使用 Node.js, 首先需要进行安装。</p>
-
-<h3>安装Node.js</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>wget http://nodejs.org/dist/v0.6.12/node-v0.6.12.tar.gz
-</span><span class='line'>tar xzvf node-v0.6.12.tar.gz
-</span><span class='line'>cd node-v0.6.12
-</span><span class='line'>./configure
-</span><span class='line'>make && make install</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/15/an-zhuang-he-ce-shi-node-dot-js/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -710,6 +703,10 @@ $ sudo apt-get install &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">在Heroku上配置Unicorn应用</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/">Ubuntu环境下安装和设置MySQL</a>
       </li>
     
@@ -723,10 +720,6 @@ $ sudo apt-get install &hellip;">
     
       <li class="post">
         <a href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/">改造你的 Gedit，轻松打造类 TextMate 编辑器</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/09/09/bo-ke-xin-sheng/">博客新生</a>
       </li>
     
   </ul>

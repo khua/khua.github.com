@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Unicorn | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/unicorn/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2012-12-31T11:08:57+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在Heroku上配置Unicorn应用]]></title>
+    <link href="http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/"/>
+    <updated>2012-12-31T10:49:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong</id>
+    <content type="html"><![CDATA[<p><code>2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！</code></p>
+
+<p><strong>翻译自：</strong> http://kzk9.net/archive/7/2012</p>
+
+<p>我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间，我们不断增强应用程序的部署配置。这篇文章展示了如何在Heroku上部署Unicorn，并且使应用性能更好和更稳定。</p>
+
+<h3>Unicorn是什么?</h3>
+
+<p>Unicorn 是Ruby Http 服务器，它启动一个主进程(master process)，监听特定的端口，并且发起(fork)几个工作进程(worker process)。每次来自客户端的请求(client request)，都由主进程传递给(handed)工作进程，当请求完成后，主进程再返回客户端。因此，只需监听1个端口，但能处理几个并行的请求。</p>
+
+<h3>Gemfile</h3>
+
+<p>为获得性能，我们使用OobGC (Out-of-bound GC 的缩写)。这使我们能够在处理用户请求时避免垃圾回收 (garbage collection, GC)。反而，GC发生在请求之外。</p>
+
+<p><code>
+gem "unicorn", "~&gt; 4.3.1"
+</code></p>
+
+<!--more-->
+
+
+<h3>Procfile</h3>
+
+<p><code>
+web: bundle exec unicorn -c lib/unicorn/config.rb -p $PORT
+</code></p>
+
+<h3>lib/unicorn/config.rb</h3>
+
+<p>'preload_app'配置用于快速应用部署。每个赛道(single dyno)，我们有4个工作进程。这表示1个进程最大能有128M内存，因为每个赛道(single dyno)只有512M内存。内存的限制由unicorn_killer.rb来配置，下面我们会详细介绍。
+```</p>
+
+<h1>What the timeout for killing busy workers is, in seconds</h1>
+
+<p>timeout 60</p>
+
+<h1>Whether the app should be pre-loaded</h1>
+
+<p>preload_app true</p>
+
+<h1>How many worker processes</h1>
+
+<p>worker_processes 4</p>
+
+<h1>before/after forks</h1>
+
+<p>before_fork do |server, worker|
+  sleep 1
+end
+after_fork do |server, worker|
+  GC.disable
+end
+```</p>
+
+<h3>config.ru</h3>
+
+<p>使用OobGC 和 unicorn_killer.rb 来限制最大内存使用。</p>
+
+<p>```</p>
+
+<h1>Unicorn self-process killer</h1>
+
+<p>require ::File.expand_path('../lib/unicorn/unicorn_killer',  <strong>FILE</strong>)
+use UnicornKiller::MaxRequests, 10240 + Random.rand(10240)
+use UnicornKiller::Oom, 96 * 1024 + Random.rand(32) * 1024</p>
+
+<h1>Out-Of-Band GC</h1>
+
+<p>require 'unicorn/oob_gc'
+use Unicorn::OobGC
+```</p>
+
+<h3>lib/unicorn/unicorn_killer.rb</h3>
+
+<p>这个Rack中间件(rack middleware)使你能够终止(kill)浪费内存(memory-fat)的进程，这样可以避免在一个单一赛道里交换(swapping)。</p>
+
+<p>```</p>
+
+<h1>from https://gist.github.com/1258681</h1>
+
+<h1># your config.ru</h1>
+
+<h1>require 'unicorn_killer'</h1>
+
+<h1>use UnicornKiller::MaxRequests, 1000</h1>
+
+<h1>use UnicornKiller::Oom, 400 * 1024</h1>
+
+<p>module UnicornKiller
+  module Kill</p>
+
+<pre><code>def quit
+  sec = (Time.now - @process_start).to_i
+  warn "#{self.class} send SIGQUIT (pid: #{Process.pid})\talive: #{sec} sec"
+  Process.kill :QUIT, Process.pid 
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  class Oom</p>
+
+<pre><code>include Kill
+
+def initialize(app, memory_size= 512 * 1024, check_cycle = 16)
+  @app = app
+  @memory_size = memory_size
+  @check_cycle = check_cycle
+  @check_count = 0
+end 
+
+def rss
+  `ps -o rss= -p #{Process.pid}`.to_i
+end
+
+def call(env)
+  @process_start ||= Time.now
+  if (@check_count += 1) % @check_cycle == 0
+    @check_count = 0
+    quit if rss &gt; @memory_size
+  end
+  @app.call env
+end
+</code></pre>
+
+<p>  end</p>
+
+<p>  class MaxRequests</p>
+
+<pre><code>include Kill
+
+def initialize(app, max_requests = 1000)
+  @app = app 
+  @max_requests = max_requests
+end
+
+def call(env)
+  @process_start ||= Time.now
+  quit if (@max_requests -= 1) == 0
+  @app.call env
+end
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<h3>结论</h3>
+
+<p>通过配置，我们实现了 1) 单一赛道里的并行进程；2) 场外垃圾回收(out-of-bound GC)； 3) 避免交换(swap)； 4) 快速程序加载。这值得为所有在Heroku上应用部署人员推荐。希望能帮到大家。</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -4,7 +4,7 @@
   <title><![CDATA[TOPI.CO]]></title>
   <link href="http://khua.github.com/atom.xml" rel="self"/>
   <link href="http://khua.github.com/"/>
-  <updated>2012-10-28T10:42:19+08:00</updated>
+  <updated>2012-12-31T11:08:57+08:00</updated>
   <id>http://khua.github.com/</id>
   <author>
     <name><![CDATA[Kevin Hua]]></name>
@@ -12,6 +12,220 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在Heroku上配置Unicorn应用]]></title>
+    <link href="http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/"/>
+    <updated>2012-12-31T10:49:00+08:00</updated>
+    <id>http://khua.github.com/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong</id>
+    <content type="html"><![CDATA[<p><code>2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！</code></p>
+
+<p><strong>翻译自：</strong> http://kzk9.net/archive/7/2012</p>
+
+<p>我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间，我们不断增强应用程序的部署配置。这篇文章展示了如何在Heroku上部署Unicorn，并且使应用性能更好和更稳定。</p>
+
+<h3>Unicorn是什么?</h3>
+
+<p>Unicorn 是Ruby Http 服务器，它启动一个主进程(master process)，监听特定的端口，并且发起(fork)几个工作进程(worker process)。每次来自客户端的请求(client request)，都由主进程传递给(handed)工作进程，当请求完成后，主进程再返回客户端。因此，只需监听1个端口，但能处理几个并行的请求。</p>
+
+<h3>Gemfile</h3>
+
+<p>为获得性能，我们使用OobGC (Out-of-bound GC 的缩写)。这使我们能够在处理用户请求时避免垃圾回收 (garbage collection, GC)。反而，GC发生在请求之外。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>gem "unicorn", "~&gt; 4.3.1"</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<h3>Procfile</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>web: bundle exec unicorn -c lib/unicorn/config.rb -p $PORT</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>lib/unicorn/config.rb</h3>
+
+<p>&#8216;preload_app&#8217;配置用于快速应用部署。每个赛道(single dyno)，我们有4个工作进程。这表示1个进程最大能有128M内存，因为每个赛道(single dyno)只有512M内存。内存的限制由unicorn_killer.rb来配置，下面我们会详细介绍。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># What the timeout for killing busy workers is, in seconds
+</span><span class='line'>timeout 60
+</span><span class='line'>
+</span><span class='line'># Whether the app should be pre-loaded
+</span><span class='line'>preload_app true
+</span><span class='line'>
+</span><span class='line'># How many worker processes
+</span><span class='line'>worker_processes 4
+</span><span class='line'>
+</span><span class='line'># before/after forks
+</span><span class='line'>before_fork do |server, worker|
+</span><span class='line'>  sleep 1
+</span><span class='line'>end
+</span><span class='line'>after_fork do |server, worker|
+</span><span class='line'>  GC.disable
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>config.ru</h3>
+
+<p>使用OobGC 和 unicorn_killer.rb 来限制最大内存使用。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Unicorn self-process killer
+</span><span class='line'>require ::File.expand_path('../lib/unicorn/unicorn_killer',  __FILE__)
+</span><span class='line'>use UnicornKiller::MaxRequests, 10240 + Random.rand(10240)
+</span><span class='line'>use UnicornKiller::Oom, 96 * 1024 + Random.rand(32) * 1024
+</span><span class='line'>
+</span><span class='line'># Out-Of-Band GC
+</span><span class='line'>require 'unicorn/oob_gc'
+</span><span class='line'>use Unicorn::OobGC</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>lib/unicorn/unicorn_killer.rb</h3>
+
+<p>这个Rack中间件(rack middleware)使你能够终止(kill)浪费内存(memory-fat)的进程，这样可以避免在一个单一赛道里交换(swapping)。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># from https://gist.github.com/1258681
+</span><span class='line'># # your config.ru
+</span><span class='line'># require 'unicorn_killer'
+</span><span class='line'># use UnicornKiller::MaxRequests, 1000
+</span><span class='line'># use UnicornKiller::Oom, 400 * 1024
+</span><span class='line'>
+</span><span class='line'>module UnicornKiller
+</span><span class='line'>  module Kill
+</span><span class='line'>    def quit
+</span><span class='line'>      sec = (Time.now - @process_start).to_i
+</span><span class='line'>      warn "#{self.class} send SIGQUIT (pid: #{Process.pid})\talive: #{sec} sec"
+</span><span class='line'>      Process.kill :QUIT, Process.pid 
+</span><span class='line'>    end
+</span><span class='line'>  end 
+</span><span class='line'>
+</span><span class='line'>  class Oom
+</span><span class='line'>    include Kill
+</span><span class='line'>
+</span><span class='line'>    def initialize(app, memory_size= 512 * 1024, check_cycle = 16)
+</span><span class='line'>      @app = app
+</span><span class='line'>      @memory_size = memory_size
+</span><span class='line'>      @check_cycle = check_cycle
+</span><span class='line'>      @check_count = 0
+</span><span class='line'>    end 
+</span><span class='line'>
+</span><span class='line'>    def rss
+</span><span class='line'>      `ps -o rss= -p #{Process.pid}`.to_i
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def call(env)
+</span><span class='line'>      @process_start ||= Time.now
+</span><span class='line'>      if (@check_count += 1) % @check_cycle == 0
+</span><span class='line'>        @check_count = 0
+</span><span class='line'>        quit if rss &gt; @memory_size
+</span><span class='line'>      end
+</span><span class='line'>      @app.call env
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>
+</span><span class='line'>  class MaxRequests
+</span><span class='line'>    include Kill
+</span><span class='line'>
+</span><span class='line'>    def initialize(app, max_requests = 1000)
+</span><span class='line'>      @app = app 
+</span><span class='line'>      @max_requests = max_requests
+</span><span class='line'>    end
+</span><span class='line'>
+</span><span class='line'>    def call(env)
+</span><span class='line'>      @process_start ||= Time.now
+</span><span class='line'>      quit if (@max_requests -= 1) == 0
+</span><span class='line'>      @app.call env
+</span><span class='line'>    end
+</span><span class='line'>  end
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>结论</h3>
+
+<p>通过配置，我们实现了 1) 单一赛道里的并行进程；2) 场外垃圾回收(out-of-bound GC)； 3) 避免交换(swap)； 4) 快速程序加载。这值得为所有在Heroku上应用部署人员推荐。希望能帮到大家。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu环境下安装和设置MySQL]]></title>
