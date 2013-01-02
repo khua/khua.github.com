@@ -9,7 +9,7 @@
   <meta name="author" content="Kevin Hua">
 
   
-  <meta name="description" content="2012年很快过去，但2012年的计划大都还没有完成，但也不乏意外收获；期望2013年能完成更多计划，实现更多梦想！ 翻译自： http://kzk9.net/archive/7/2012 我们在这几个月里已经采用Unicorn + Heroku 部署了数个基于Rack 的应用程序。在此期间， &hellip;">
+  <meta name="description" content="模型简析 Diaspora的模型主要在app/models目录下定义，下面我们选择主要的几个模型分析： User —— 用户(User)模型首当其冲。用户模型代表用户的私人信息(private information)以及用户在服务器上的权限/能力(capabilities)。用户可以加好友( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,69 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/02/diasporamo-xing-jian-xi/">Diaspora模型简析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-02T18:21:00+08:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>模型简析</h3>
+
+<p>Diaspora的模型主要在<code>app/models</code>目录下定义，下面我们选择主要的几个模型分析：</p>
+
+<p><strong>User</strong> —— 用户(User)模型首当其冲。用户模型代表用户的私人信息(private information)以及用户在服务器上的权限/能力(capabilities)。用户可以加好友(friend people)、贴更新(post updates)以及编辑档案(edit his profile)。每位User有一个Person与之对应。</p>
+
+<p><strong>Contact</strong> —— 当用户(User)添加好友时，联系人(Contact)作为“代理”对象(&#8220;proxy&#8221; object)。</p>
+
+<p><strong>Person</strong> ——  从外界来看(viewed from outside)，用户(User)表现为人(Person)。当用户添加另外一位用户为好友时，他们是添加另外一位用户的&#8221;人&#8221;对象(person object)。&#8221;人&#8221;对象在不同服务器间(across servers)复制，也是用户的公共秘钥(public key)所在的地方。一个&#8221;人&#8221;有很多贴子(Posts)；一个&#8221;人&#8221;有一个档案。</p>
+
+<p><strong>Profile</strong> —— 个人信息(Profile)，包括关于&#8221;个人&#8221;的信息(information about person)。目前，在任何人看来，个人信息是相同的。</p>
+
+<p><strong>Request</strong> —— 请求(request)，好友请求。</p>
+
+<p><strong>Aspect</strong> —— 直译为&#8221;方面&#8221;，翻译为&#8221;圈子&#8221;更好。圈子(Aspects)包括不同的圈子(Aspect)，每个Aspect包含一组用户(list of people)，每个用户分享了一些贴子(posts)。圈子(Aspects)是用户的私人信息，也许可以嵌入到(embed in)用户数据中。调用时，下面这些方法都可以：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Person.find(:id).aspects.posts
+</span><span class='line'>Person.find(:id).aspects.first.posts</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/01/02/diasporamo-xing-jian-xi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -617,77 +680,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Rails本地开发环境和远程部署环境搭建</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-19T20:54:00+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前段时间测试及部署者也以及Ruby China源程序，本地开发环境选择Ubuntu 10.04.03 LTS *；远程部署环境选择CentOS 5.6 (AMD) 64-bit。</p>
-
-<p>(* 为了支持新的硬件，升级到了<code>linux-header-2.6.32-38</code>，用<code>uname -r</code>查看，显示<code>3.0.0-997-generic</code>)</p>
-
-<h3>一、基于CentOS 5.6的部署环境</h3>
-
-<h4>1a. 设置远程登录</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ssh root@96.126.102.82</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Windows环境下，可以使用Putty进行远程连接，并通过修改<code>Apperance: Fixdays</code>及<code>Translation: UTF-8</code>，以正常显示中文。</p>
-
-<h4>1b. 设置locale <code>vim /etc/profile</code>，添加：</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">export</span> <span class="no">LC_ALL</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
-</span><span class='line'><span class="n">export</span> <span class="no">LANG</span> <span class="o">=</span> <span class="n">zh_CN</span><span class="o">.</span><span class="n">UTF8</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>2. 安装一些基本包</h4>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">yum</span> <span class="n">install</span> <span class="n">gcc</span> <span class="n">g</span><span class="o">++</span> <span class="n">gcc</span><span class="o">-</span><span class="n">c</span><span class="o">++</span> <span class="n">make</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/03/19/railsben-di-kai-fa-huan-jing-he-yuan-cheng-bu-shu-huan-jing-da-jian/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -701,6 +693,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/diasporamo-xing-jian-xi/">Diaspora模型简析</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">在Heroku上配置Unicorn应用</a>
@@ -718,10 +714,6 @@
         <a href="/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/">编辑器大作战——Sublime Text 2</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2012/09/09/gai-zao-ni-de-gedit%2Cqing-song-da-zao-lei-textmate-bian-ji-qi/">改造你的 Gedit，轻松打造类 TextMate 编辑器</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -736,7 +728,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Kevin Hua -
+  Copyright &copy; 2013 - Kevin Hua -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

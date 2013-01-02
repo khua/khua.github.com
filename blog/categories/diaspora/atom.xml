@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Diaspora | TOPI.CO]]></title>
+  <link href="http://khua.github.com/blog/categories/diaspora/atom.xml" rel="self"/>
+  <link href="http://khua.github.com/"/>
+  <updated>2013-01-02T22:23:36+08:00</updated>
+  <id>http://khua.github.com/</id>
+  <author>
+    <name><![CDATA[Kevin Hua]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Diaspora模型简析]]></title>
+    <link href="http://khua.github.com/blog/2013/01/02/diasporamo-xing-jian-xi/"/>
+    <updated>2013-01-02T18:21:00+08:00</updated>
+    <id>http://khua.github.com/blog/2013/01/02/diasporamo-xing-jian-xi</id>
+    <content type="html"><![CDATA[<h3>模型简析</h3>
+
+<p>Diaspora的模型主要在<code>app/models</code>目录下定义，下面我们选择主要的几个模型分析：</p>
+
+<p><strong>User</strong> —— 用户(User)模型首当其冲。用户模型代表用户的私人信息(private information)以及用户在服务器上的权限/能力(capabilities)。用户可以加好友(friend people)、贴更新(post updates)以及编辑档案(edit his profile)。每位User有一个Person与之对应。</p>
+
+<p><strong>Contact</strong> —— 当用户(User)添加好友时，联系人(Contact)作为“代理”对象("proxy" object)。</p>
+
+<p><strong>Person</strong> ——  从外界来看(viewed from outside)，用户(User)表现为人(Person)。当用户添加另外一位用户为好友时，他们是添加另外一位用户的"人"对象(person object)。"人"对象在不同服务器间(across servers)复制，也是用户的公共秘钥(public key)所在的地方。一个"人"有很多贴子(Posts)；一个"人"有一个档案。</p>
+
+<p><strong>Profile</strong> —— 个人信息(Profile)，包括关于"个人"的信息(information about person)。目前，在任何人看来，个人信息是相同的。</p>
+
+<p><strong>Request</strong> —— 请求(request)，好友请求。</p>
+
+<p><strong>Aspect</strong> —— 直译为"方面"，翻译为"圈子"更好。圈子(Aspects)包括不同的圈子(Aspect)，每个Aspect包含一组用户(list of people)，每个用户分享了一些贴子(posts)。圈子(Aspects)是用户的私人信息，也许可以嵌入到(embed in)用户数据中。调用时，下面这些方法都可以：</p>
+
+<p><code>
+Person.find(:id).aspects.posts
+Person.find(:id).aspects.first.posts
+</code></p>
+
+<!--more-->
+
+
+<p><strong>Post</strong> —— 贴子(Post)属于"个人(Person)"。Post是不同类型的贴子的父类，包括评论ids (comment ids)，以及一些各类贴子共有的属性(attributes)。</p>
+
+<ul>
+<li>状态信息(Status Message)继承自Post</li>
+<li>照片(Photo)继承自Post</li>
+</ul>
+
+
+<p><strong>Comment</strong> —— 评论(comment)属于Post</p>
+
+<p><strong>Retraction</strong> —— 撤回(Retraction)，当贴子创建者(post creator)删除贴子时，撤回对象会发出。这不是一个模型，但可以序列化(serialize)，并派遣(dispatch)到其它Diaspora服务器，正与我们的模型行为相似。</p>
+
+<h3>发贴子 Posting something (app/models/user):</h3>
+
+<p>*当用户贴贴子时，他/她将贴子发布到其中一个圈子或所有圈子；</p>
+
+<p>*如果贴子通过验证，贴子被创建，并且存放在该用户的raw_visible_posts里；</p>
+
+<p>*贴子的html在服务器端渲染，并且通过websocket推送给用户；</p>
+
+<p>*然后贴子序列化(serialize)为xml，封装在加密(encrypted)和签名(signed)的三明治信封(salmon envelope)里，并发给(POSTed)接收者(recipient people)的接收链接(receive
+urls)，即(“http://pod.location/receive/users/:id[person_id]”)。</p>
+
+<h3>接收贴子 Receiving a post (app/controllers/publics_controller.rb &amp; lib/diaspora/user/receiving.rb ):</h3>
+
+<p>*用户接收到三明治信封，并解密(decrypts the headers)；</p>
+
+<p>*如果信封上的签名(signature on the salmon data)是来自发贴子(sent posts)的人(person)，数据将会被整理为对象(marshaled into an object)，并储存到数据库；</p>
+
+<p>*该贴子的id会储存到接收用户(receiving user)的visible posts，也保存到发贴者(sender)在接收用户的圈子(posts for the aspect the sender is in)。</p>
+]]></content>
+  </entry>
+  
+</feed>

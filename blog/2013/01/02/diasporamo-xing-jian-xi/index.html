@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Diaspora模型简析 - TOPI.CO</title>
+  <meta name="author" content="Kevin Hua">
+
+  
+  <meta name="description" content="模型简析 Diaspora的模型主要在app/models目录下定义，下面我们选择主要的几个模型分析： User —— 用户(User)模型首当其冲。用户模型代表用户的私人信息(private information)以及用户在服务器上的权限/能力(capabilities)。用户可以加好友( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://khua.github.com/blog/2013/01/02/diasporamo-xing-jian-xi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="TOPI.CO" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">TOPI.CO</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:khua.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">博客</a></li>
+  <li><a href="/blog/archives">存档</a></li>
+  <li><a href="/about">关于</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Diaspora模型简析</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-02T18:21:00+08:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>模型简析</h3>
+
+<p>Diaspora的模型主要在<code>app/models</code>目录下定义，下面我们选择主要的几个模型分析：</p>
+
+<p><strong>User</strong> —— 用户(User)模型首当其冲。用户模型代表用户的私人信息(private information)以及用户在服务器上的权限/能力(capabilities)。用户可以加好友(friend people)、贴更新(post updates)以及编辑档案(edit his profile)。每位User有一个Person与之对应。</p>
+
+<p><strong>Contact</strong> —— 当用户(User)添加好友时，联系人(Contact)作为“代理”对象(&#8220;proxy&#8221; object)。</p>
+
+<p><strong>Person</strong> ——  从外界来看(viewed from outside)，用户(User)表现为人(Person)。当用户添加另外一位用户为好友时，他们是添加另外一位用户的&#8221;人&#8221;对象(person object)。&#8221;人&#8221;对象在不同服务器间(across servers)复制，也是用户的公共秘钥(public key)所在的地方。一个&#8221;人&#8221;有很多贴子(Posts)；一个&#8221;人&#8221;有一个档案。</p>
+
+<p><strong>Profile</strong> —— 个人信息(Profile)，包括关于&#8221;个人&#8221;的信息(information about person)。目前，在任何人看来，个人信息是相同的。</p>
+
+<p><strong>Request</strong> —— 请求(request)，好友请求。</p>
+
+<p><strong>Aspect</strong> —— 直译为&#8221;方面&#8221;，翻译为&#8221;圈子&#8221;更好。圈子(Aspects)包括不同的圈子(Aspect)，每个Aspect包含一组用户(list of people)，每个用户分享了一些贴子(posts)。圈子(Aspects)是用户的私人信息，也许可以嵌入到(embed in)用户数据中。调用时，下面这些方法都可以：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Person.find(:id).aspects.posts
+</span><span class='line'>Person.find(:id).aspects.first.posts</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<p><strong>Post</strong> —— 贴子(Post)属于&#8221;个人(Person)&#8221;。Post是不同类型的贴子的父类，包括评论ids (comment ids)，以及一些各类贴子共有的属性(attributes)。</p>
+
+<ul>
+<li>状态信息(Status Message)继承自Post</li>
+<li>照片(Photo)继承自Post</li>
+</ul>
+
+
+<p><strong>Comment</strong> —— 评论(comment)属于Post</p>
+
+<p><strong>Retraction</strong> —— 撤回(Retraction)，当贴子创建者(post creator)删除贴子时，撤回对象会发出。这不是一个模型，但可以序列化(serialize)，并派遣(dispatch)到其它Diaspora服务器，正与我们的模型行为相似。</p>
+
+<h3>发贴子 Posting something (app/models/user):</h3>
+
+<p>*当用户贴贴子时，他/她将贴子发布到其中一个圈子或所有圈子；</p>
+
+<p>*如果贴子通过验证，贴子被创建，并且存放在该用户的raw_visible_posts里；</p>
+
+<p>*贴子的html在服务器端渲染，并且通过websocket推送给用户；</p>
+
+<p>*然后贴子序列化(serialize)为xml，封装在加密(encrypted)和签名(signed)的三明治信封(salmon envelope)里，并发给(POSTed)接收者(recipient people)的接收链接(receive
+urls)，即(“http://pod.location/receive/users/:id[person_id]”)。</p>
+
+<h3>接收贴子 Receiving a post (app/controllers/publics_controller.rb &amp; lib/diaspora/user/receiving.rb ):</h3>
+
+<p>*用户接收到三明治信封，并解密(decrypts the headers)；</p>
+
+<p>*如果信封上的签名(signature on the salmon data)是来自发贴子(sent posts)的人(person)，数据将会被整理为对象(marshaled into an object)，并储存到数据库；</p>
+
+<p>*该贴子的id会储存到接收用户(receiving user)的visible posts，也保存到发贴者(sender)在接收用户的圈子(posts for the aspect the sender is in)。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Kevin Hua</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-02T18:21:00+08:00" pubdate data-updated="true">Jan 2<span>nd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/diaspora/'>Diaspora</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/" title="Previous Post: 在Heroku上配置Unicorn应用">&laquo; 在Heroku上配置Unicorn应用</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/diasporamo-xing-jian-xi/">Diaspora模型简析</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/31/zai-herokushang-pei-zhi-unicornying-yong/">在Heroku上配置Unicorn应用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/10/28/ubuntuhuan-jing-xia-an-zhuang-he-she-zhi-mysql/">Ubuntu环境下安装和设置MySQL</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/15/chang-jian-de-javascript-mvckuang-jia/">常见的JavaScript MVC框架</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/09/09/bian-ji-qi-da-zuo-zhan-sublime-text-2/">编辑器大作战——Sublime Text 2</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Kevin Hua -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'topico';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://khua.github.com/blog/2013/01/02/diasporamo-xing-jian-xi/';
+        var disqus_url = 'http://khua.github.com/blog/2013/01/02/diasporamo-xing-jian-xi/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
